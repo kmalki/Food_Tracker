@@ -1,0 +1,43 @@
+version: '3.3'
+
+services:
+  cassandra:
+    image: cassandra:latest
+    ports:
+      - '9042:9042'
+      - '7000:7000'
+    volumes:
+      - volume/cassandra/cassandra_data
+    environment:
+      - CASSANDRA_SEEDS=cassandra
+      - CASSANDRA_PASSWORD_SEEDER=yes
+      - CASSANDRA_PASSWORD=cassandra
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - volume/mangodb/mongodb_data
+    environment:
+      MONGO_INITDB_DATABASE: products
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: users
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - volume/mysql/mysql_data
+
+volumes:
+  mongodb_data:
+    driver: local
+  cassandra_data:
+    driver: local
+  mysql_data:
+    driver: local
