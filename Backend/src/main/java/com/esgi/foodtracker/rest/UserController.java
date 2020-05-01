@@ -2,7 +2,9 @@ package com.esgi.foodtracker.rest;
 
 import com.esgi.foodtracker.model.UserApp;
 import com.esgi.foodtracker.repository.UserRepository;
-import org.apache.log4j.Logger;
+import com.github.rozidan.springboot.logger.Loggable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
-    final static Logger logger = Logger.getLogger(UserController.class);
+    final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
 
     private UserRepository userRepository;
@@ -22,9 +24,9 @@ public class UserController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    @Loggable
     @PostMapping("/sign-up")
     public void signUp(@RequestBody UserApp user) {
-        logger.info(user);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
