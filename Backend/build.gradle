@@ -36,6 +36,7 @@ dependencies {
     implementation 'com.auth0:java-jwt:3.4.0'
     implementation group: 'com.google.zxing', name: 'core', version: '3.4.0'
     implementation group: 'com.google.zxing', name: 'javase', version: '3.4.0'
+    implementation group: 'com.datastax.oss', name: 'java-driver-core', version: '4.6.0'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
