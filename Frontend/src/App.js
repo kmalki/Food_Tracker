@@ -9,6 +9,8 @@ import {
 import Home from './components/home.js';
 import Recettes from './components/recettes.js';
 import Paniers from './components/paniers.js';
+import Register from './components/register.js';
+import Login from './components/login.js';
 
 function App() {
 
@@ -21,8 +23,14 @@ function App() {
           <Route path="/paniers">
             <Paniers />
           </Route>
-          <Route path="/">
+          <Route path="/home">
             <Home />
+          </Route>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/">
+            <Register />
           </Route>
         </Switch>
     </Router>

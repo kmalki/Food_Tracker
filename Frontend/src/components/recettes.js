@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AuthService from '../services/auth-service';
 
 import {
   EuiPage,
@@ -15,7 +16,8 @@ import {
   EuiAccordion,
   EuiDualRange,
   EuiFormHelpText,
-  EuiLink
+  EuiLink,
+  EuiButton
 } from '@elastic/eui';
 
 export default function Recettes() {
@@ -47,8 +49,8 @@ export default function Recettes() {
     categorie: 'Soupe'
   }];
 
-  const [items, setItems] = useState(recettes);
-  const [isLoading, setIsLoading] = useState(false);
+  const [items] = useState(recettes);
+  const [isLoading] = useState(false);
 
 
   const [value, setValue] = useState(['', '']);
@@ -98,62 +100,74 @@ export default function Recettes() {
     ]
   };
 
-  return (
-    <EuiPage>
-      <EuiPageBody>
-        <EuiPageContent>
-          <EuiPageContentHeader>
-            <EuiPageContentHeaderSection>
-              <EuiTitle size='l'>
-                <h1>Food Tracker</h1>
-              </EuiTitle>
-            </EuiPageContentHeaderSection>
-          </EuiPageContentHeader>
-          <EuiPageContentBody>
-            <EuiFlexGroup>
-              <EuiFlexItem>
-                <EuiTitle size='m'>
-                  <h3>Recettes</h3>
-                </EuiTitle>
-                <EuiSpacer />
-                <EuiAccordion
-                  id="accordion"
-                  buttonContent="Gérer le temps des recettes"
-                  paddingSize="m">
-                  <EuiDualRange
-                    min={0}
-                    max={100}
-                    step={20}
-                    value={value}
-                    onChange={onChange}
-                    showLabels
-                    showTicks
-                    aria-label="An example of EuiDualRange"
-                    showInput={true}
-                  />
-                  <EuiFormHelpText id="levelsHelp">
-                    Temps de préparation nécessaire pour les recettes en minutes.
-                  </EuiFormHelpText>
-                </EuiAccordion>
-                <EuiSpacer />
+  if (AuthService.getCurrentUser()) {
+    return (
+      <EuiPage>
+        <EuiPageBody>
+          <EuiPageContent>
+            <EuiPageContentHeader>
+            <EuiPageContentHeaderSection style={{"width": "100%"}}>
+                  <EuiFlexGroup justifyContent="spaceBetween" style={{"width": "100%"}}>
+                    <EuiFlexItem grow={false} tyle={{ minWidth: 200 }}>
+                      <EuiTitle size='l'>
+                        <h1>Food Tracker</h1>
+                      </EuiTitle>
+                    </EuiFlexItem>
+                    <EuiFlexItem grow={false}>
+                      <EuiButton onClick={() => AuthService.logout()}> Logout </EuiButton>
+                    </EuiFlexItem>
+                  </EuiFlexGroup>
+                </EuiPageContentHeaderSection>
+            </EuiPageContentHeader>
+            <EuiPageContentBody>
+              <EuiFlexGroup>
+                <EuiFlexItem>
+                  <EuiTitle size='m'>
+                    <h3>Recettes</h3>
+                  </EuiTitle>
+                  <EuiSpacer />
+                  <EuiAccordion
+                    id="accordion"
+                    buttonContent="Gérer le temps des recettes"
+                    paddingSize="m">
+                    <EuiDualRange
+                      min={0}
+                      max={100}
+                      step={20}
+                      value={value}
+                      onChange={onChange}
+                      showLabels
+                      showTicks
+                      aria-label="An example of EuiDualRange"
+                      showInput={true}
+                    />
+                    <EuiFormHelpText id="levelsHelp">
+                      Temps de préparation nécessaire pour les recettes en minutes.
+                    </EuiFormHelpText>
+                  </EuiAccordion>
+                  <EuiSpacer />
 
-                <EuiInMemoryTable
-                  items={items}
-                  loading={isLoading}
-                  columns={columns}
-                  search={search}
-                  pagination={true}
-                  sorting={true}
-                />
-              </EuiFlexItem>
-            </EuiFlexGroup>
-            <EuiSpacer/>
-            <EuiLink href="/" >
-              Retour
-            </EuiLink>{' '}
-          </EuiPageContentBody>
-        </EuiPageContent>
-      </EuiPageBody>
-    </EuiPage>
-  );
+                  <EuiInMemoryTable
+                    items={items}
+                    loading={isLoading}
+                    columns={columns}
+                    search={search}
+                    pagination={true}
+                    sorting={true}
+                  />
+                </EuiFlexItem>
+              </EuiFlexGroup>
+              <EuiSpacer/>
+              <EuiLink href="/home" >
+                Home
+              </EuiLink>{' '}
+            </EuiPageContentBody>
+          </EuiPageContent>
+        </EuiPageBody>
+      </EuiPage>
+    );
+  }
+  else {
+    window.location.href = '/login';
+  }
 }
