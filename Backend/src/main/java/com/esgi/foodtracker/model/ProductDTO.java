@@ -4,32 +4,43 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-@Document(collection = "test")
+@Document(collection = "products")
 public class ProductDTO {
     @Id
-    private ObjectId _id;
+    private ObjectId id;
 
     private String product_name;
-    private Long code;
+    private String code;
     private String url;
+    private String category;
+    private String brand;
 
-    public ProductDTO() {
-    }
+    public ProductDTO(){}
 
-    public ProductDTO(ObjectId _id, String product_name, Long code, String url) {
-        this._id = _id;
+    public ProductDTO(String product_name, String code, String category, String brand) {
+        this.id = new ObjectId();
         this.product_name = product_name;
         this.code = code;
+        this.category = category;
+        this.brand = brand;
+        this.url = "";
+    }
+
+    public ProductDTO(String product_name, String code, String category, String brand, String url) {
+        this.id = new ObjectId();
+        this.product_name = product_name;
+        this.code = code;
+        this.category = category;
+        this.brand = brand;
         this.url = url;
     }
 
     public ObjectId get_id() {
-        return _id;
+        return id;
     }
 
     public void set_id(ObjectId _id) {
-        this._id = _id;
+        this.id = _id;
     }
 
     public String getProduct_name() {
@@ -40,11 +51,11 @@ public class ProductDTO {
         this.product_name = product_name;
     }
 
-    public Long getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Long code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -56,12 +67,31 @@ public class ProductDTO {
         this.url = url;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
     @Override
     public String toString() {
         return "ProductDTO{" +
-                "product_name='" + product_name + '\'' +
+                "id=" + id +
+                ", product_name='" + product_name + '\'' +
                 ", code=" + code +
                 ", url='" + url + '\'' +
+                ", category='" + category + '\'' +
+                ", brand='" + brand + '\'' +
                 '}';
     }
 }

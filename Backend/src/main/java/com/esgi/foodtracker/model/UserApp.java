@@ -3,10 +3,16 @@ package com.esgi.foodtracker.model;
 import javax.persistence.*;
 
 @Entity
+@Table(
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = "username", name = "uniqueNameConstraint")
+        }
+)
 public class UserApp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String username;
     private String password;
 

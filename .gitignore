@@ -3,3 +3,4 @@ node_modules
 Backend/.gradle
 Backend/.idea
 Backend/build
+Backend/src/main/resources/products.bson
