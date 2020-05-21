@@ -93,13 +93,15 @@ public class ProductService {
 
     public void insertOrUpdateProductUserHabits(ProductDTO product, int quantity){
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ProductUserHabitDTO productUserHabit = productUserHabitsRepository.findProductUserHabitDTOByUseridAndAndCode(
+        ProductUserHabitDTO productUserHabit = productUserHabitsRepository.findProductUserHabitDTOByPuk_UseridAndPuk_Code(
                 username,
                 product.getCode());
         if(productUserHabit==null){
             productUserHabit = new ProductUserHabitDTO(
-                    username,
-                    product.getCode(),
+                    new ProductUserKey(
+                            username,
+                            product.getCode()
+                    ),
                     product.getProduct_name(),
                     product.getCategory(),
                     product.getBrand(),
