@@ -12,7 +12,8 @@ class AuthService {
             .then(response => {
                 console.log(response.headers.authorization);
                 if (response.headers.authorization) {
-                    localStorage.setItem("foodTrackerUser", JSON.stringify(response.headers.authorization));
+                    localStorage.setItem("foodTrackerAuthorization", JSON.stringify(response.headers.authorization));
+                    localStorage.setItem("foodTrackerUsername", username);                
                 }
 
                 return response.data;
@@ -20,7 +21,8 @@ class AuthService {
     }
 
     logout() {
-        localStorage.removeItem("foodTrackerUser");
+        localStorage.removeItem("foodTrackerAuthorization");
+        localStorage.removeItem("foodTrackerUsername");
         window.location.href = '/login';
     }
 
@@ -32,7 +34,7 @@ class AuthService {
     }
 
     getCurrentUser() {
-        return JSON.parse(localStorage.getItem('foodTrackerUser'));;
+        return JSON.parse(localStorage.getItem('foodTrackerUser'));
     }
 }
 

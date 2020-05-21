@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../App.css';
 import CustomCarousel from './customCarousel.js';
 import AuthService from '../services/auth-service';
+import ProductService from '../services/products-handler';
 
 import {
   EuiPage,
@@ -22,18 +23,7 @@ import {
 
 export default function Home() {
 
-  const columns = [
-    {
-      field: 'objet',
-      name: 'Objet',
-    },
-    {
-      field: 'quantity',
-      name: 'Quantité',
-    }
-  ];
-
-  const items = [{
+  const [items, setItems] = useState([{
     objet: 'Pomme',
     quantity: 5
   },
@@ -44,7 +34,52 @@ export default function Home() {
   {
     objet: 'Steak',
     quantity: 2
-  }];
+  }]);
+
+  const arrayRemove = (value) => {
+    setItems(items.filter(function(ele){ return ele !== value; }));
+  };
+
+  const actions = [
+    {
+      name: 'Delete',
+      description: 'Supprimer cet item',
+      icon: 'trash',
+      type: 'icon',
+      color: 'danger',
+      onClick: arrayRemove
+    }
+  ];
+
+  const columns = [
+    {
+      field: 'objet',
+      name: 'Objet',
+    },
+    {
+      field: 'quantity',
+      name: 'Quantité',
+    },
+    {
+      actions,
+      width: '1%'
+    }
+  ];
+
+  /*let items = [{
+    objet: 'Pomme',
+    quantity: 5
+  },
+  {
+    objet: 'Eau',
+    quantity: 6
+  },
+  {
+    objet: 'Steak',
+    quantity: 2
+  }];*/
+
+
 
   if (AuthService.getCurrentUser()) {
     return (
@@ -74,7 +109,14 @@ export default function Home() {
                   <EuiBasicTable
                     items={items}
                     columns={columns}
+                    hasActions={true}
                   />
+                  <EuiSpacer />
+                  <EuiFlexGroup justifyContent="spaceAround">
+                    <EuiFlexItem grow={false}>
+                      <EuiButton iconType="plusInCircleFilled" onClick={() => ProductService.getProducts()}> Ajouter un article</EuiButton>
+                    </EuiFlexItem>
+                  </EuiFlexGroup>
                 </EuiFlexItem>
                 <EuiFlexItem>
                   <EuiTitle size='m' style={{ margin: 'auto' }}>
