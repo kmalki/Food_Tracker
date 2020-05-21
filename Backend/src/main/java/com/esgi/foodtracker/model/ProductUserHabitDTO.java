@@ -8,11 +8,7 @@ public class ProductUserHabitDTO {
 
     @Column
     @PrimaryKey
-    private UUID idp;
-    @Column
-    private String userid;
-    @Column
-    private String code;
+    private ProductUserKey puk;
     @Column
     private String product_name;
     @Column
@@ -25,40 +21,22 @@ public class ProductUserHabitDTO {
     public ProductUserHabitDTO() {
     }
 
-    public ProductUserHabitDTO(String userid,
-                               String code, String product_name,
+    public ProductUserHabitDTO(ProductUserKey puk,
+                               String product_name,
                                String category, String brand, int quantity) {
-        this.idp = UUID.randomUUID();
-        this.userid = userid;
-        this.code = code;
+        this.puk = puk;
         this.product_name = product_name;
         this.category = category;
         this.quantity = quantity;
         this.brand = brand;
     }
 
-    public UUID getId() {
-        return idp;
+    public ProductUserKey getPuk() {
+        return puk;
     }
 
-    public void setId(UUID id) {
-        this.idp = id;
-    }
-
-    public String getUserid() {
-        return userid;
-    }
-
-    public void setUserid(String userid) {
-        this.userid = userid;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
+    public void setPuk(ProductUserKey puk) {
+        this.puk = puk;
     }
 
     public String getProduct_name() {
@@ -96,9 +74,7 @@ public class ProductUserHabitDTO {
     @Override
     public String toString() {
         return "ProductUserHabitDTO{" +
-                "idp=" + idp +
-                ", userid='" + userid + '\'' +
-                ", code=" + code +
+                "puk=" + puk +
                 ", product_name='" + product_name + '\'' +
                 ", category='" + category + '\'' +
                 ", quantity=" + quantity +
