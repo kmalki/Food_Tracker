@@ -1,4 +1,4 @@
-### Front end projet annuel
+# Front end projet annuel
 
 ## Démarrer
 
