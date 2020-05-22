@@ -4,9 +4,9 @@ import com.esgi.foodtracker.model.ProductUserHabitDTO;
 import com.esgi.foodtracker.model.ProductUserKey;
 import org.springframework.data.cassandra.repository.AllowFiltering;
 import org.springframework.data.cassandra.repository.CassandraRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
+@Repository
 public interface ProductUserHabitsRepository extends CassandraRepository<ProductUserHabitDTO, ProductUserKey> {
     @AllowFiltering
     ProductUserHabitDTO findProductUserHabitDTOByPuk_UseridAndPuk_Code(String username, String code);
