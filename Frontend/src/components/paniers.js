@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../App.css';
 import CustomCarousel from './customCarousel.js';
 import AuthService from '../services/auth-service';
 import ProductService from '../services/products-handler';
+import axios from "axios";
 
 import {
   EuiPage,
@@ -23,22 +24,44 @@ import {
 
 export default function Home() {
 
-  const [items, setItems] = useState([{
-    objet: 'Pomme',
-    quantity: 5
-  },
-  {
-    objet: 'Eau',
-    quantity: 6
-  },
-  {
-    objet: 'Steak',
-    quantity: 2
-  }]);
+  const [items, setItems] = useState([]);
+  const [file] = useState(buildFileSelector());
+
+  useEffect(() => {
+    ProductService.getProducts().then((response) => {
+      console.log(response.data)
+      setItems(response.data);
+    })
+  }, [])
+
+  const handleFileSelect = (e) => {
+    e.preventDefault();
+    file.click();
+  }
 
   const arrayRemove = (value) => {
-    setItems(items.filter(function(ele){ return ele !== value; }));
+    console.log(value);
+    let config = {
+      headers: {
+        Authorization: JSON.parse(localStorage.getItem('foodTrackerAuthorization'))
+      }
+    }
+    axios.post('http://localhost:8080/products/removeProduct', {
+      "quantity": 2,
+      "code": value.puk.code
+    }, config);
+    ProductService.getProducts().then((response) => {
+      console.log(response.data)
+      setItems(response.data);
+    })
+    setTimeout(() => {
+      ProductService.getProducts().then((response) => {
+        console.log(response.data)
+        setItems(response.data);
+      })
+    }, 1000);
   };
+
 
   const actions = [
     {
@@ -53,8 +76,8 @@ export default function Home() {
 
   const columns = [
     {
-      field: 'objet',
-      name: 'Objet',
+      field: 'product_name',
+      name: 'Produit',
     },
     {
       field: 'quantity',
@@ -66,20 +89,34 @@ export default function Home() {
     }
   ];
 
-  /*let items = [{
-    objet: 'Pomme',
-    quantity: 5
-  },
-  {
-    objet: 'Eau',
-    quantity: 6
-  },
-  {
-    objet: 'Steak',
-    quantity: 2
-  }];*/
+  function inform() {
+    let config = {
+      headers: {
+        Authorization: JSON.parse(localStorage.getItem('foodTrackerAuthorization'))
+      }
+    }
+    console.log(this.files);
+    const data = new FormData();
+    data.append('image', this.files[0]);
+    data.append("quantity", 2);
+    axios.post('http://localhost:8080/products/addProduct', data, config);
 
+    setTimeout(() => {
+      ProductService.getProducts().then((response) => {
+        console.log(response.data)
+        setItems(response.data);
+      })
+    }, 1000);
 
+  }
+
+  function buildFileSelector() {
+    const fileSelector = document.createElement('input');
+    fileSelector.setAttribute('type', 'file');
+    fileSelector.setAttribute('multiple', 'multiple');
+    fileSelector.onchange = inform;
+    return fileSelector;
+  }
 
   if (AuthService.getCurrentUser()) {
     return (
@@ -114,7 +151,9 @@ export default function Home() {
                   <EuiSpacer />
                   <EuiFlexGroup justifyContent="spaceAround">
                     <EuiFlexItem grow={false}>
-                      <EuiButton iconType="plusInCircleFilled" onClick={() => ProductService.getProducts()}> Ajouter un article</EuiButton>
+                      <EuiButton iconType="plusInCircleFilled" onClick={handleFileSelect}>
+                        Ajouter un article
+                      </EuiButton>
                     </EuiFlexItem>
                   </EuiFlexGroup>
                 </EuiFlexItem>

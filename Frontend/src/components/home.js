@@ -2,7 +2,6 @@ import React from 'react';
 import '../App.css';
 import CustomCarousel from './customCarousel.js';
 import AuthService from '../services/auth-service';
-import axios from "axios";
 
 import {
   EuiPage,
@@ -62,14 +61,6 @@ export default function Home() {
                   </EuiFlexItem>
                   <EuiFlexItem grow={false}>
                     <EuiButton onClick={() => AuthService.logout()}> Logout </EuiButton>
-                    <EuiButton onClick={() => {
-                      axios.get("http://localhost:8080/users/test", {
-                        headers: {
-                          'Authorization': `${AuthService.getCurrentUser()}`
-                        }
-                      })
-                    }
-                    }> Test </EuiButton>
                   </EuiFlexItem>
                 </EuiFlexGroup>
               </EuiPageContentHeaderSection>

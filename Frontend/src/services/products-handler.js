@@ -15,8 +15,7 @@ class ProductsService {
         return axios
             .get(API_URL + "getProducts", config)
             .then(response => {
-                console.log(response);
-                return response.data;
+                return response;
             });
     }
 
