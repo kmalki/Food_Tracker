@@ -100,7 +100,7 @@ export default function Home() {
     data.append('image', this.files[0]);
     data.append("quantity", 2);
     axios.post('http://localhost:8080/products/addProduct', data, config);
-
+    this.value = '';
     setTimeout(() => {
       ProductService.getProducts().then((response) => {
         console.log(response.data)
