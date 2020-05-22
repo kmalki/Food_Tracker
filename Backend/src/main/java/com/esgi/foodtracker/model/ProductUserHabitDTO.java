@@ -1,7 +1,6 @@
 package com.esgi.foodtracker.model;
 
 import org.springframework.data.cassandra.core.mapping.*;
-import java.util.UUID;
 
 @Table("product_user_habit")
 public class ProductUserHabitDTO {
