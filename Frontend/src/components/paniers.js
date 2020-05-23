@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import '../App.css';
 import CustomCarousel from './customCarousel.js';
 import AuthService from '../services/auth-service';
-import ProductService from '../services/products-handler';
 import axios from "axios";
 
 import {
@@ -27,50 +26,72 @@ export default function Home() {
   const [items, setItems] = useState([]);
   const [file] = useState(buildFileSelector());
 
-  useEffect(() => {
-    ProductService.getProducts().then((response) => {
-      console.log(response.data)
-      setItems(response.data);
-    })
-  }, [])
-
-  const handleFileSelect = (e) => {
-    e.preventDefault();
-    file.click();
+  const config = {
+    headers: {
+      Authorization: JSON.parse(localStorage.getItem('foodTrackerAuthorization'))
+    }
   }
 
-  const arrayRemove = (value) => {
-    console.log(value);
-    let config = {
-      headers: {
-        Authorization: JSON.parse(localStorage.getItem('foodTrackerAuthorization'))
-      }
-    }
-    axios.post('http://localhost:8080/products/removeProduct', {
-      "quantity": 2,
-      "code": value.puk.code
-    }, config);
-    ProductService.getProducts().then((response) => {
-      console.log(response.data)
-      setItems(response.data);
+  const API_URL_PRODUCTS = 'http://localhost:8080/products/';
+  useEffect(() => {
+    axios
+        .get(API_URL_PRODUCTS + 'getProducts', config)
+        .then((response) => {
+          setItems(response.data);
     })
-    setTimeout(() => {
-      ProductService.getProducts().then((response) => {
-        console.log(response.data)
+    // eslint-disable-next-line
+  }, [])
+
+  const removeOneItem = (item) => {
+    console.log(item);
+    axios.post(API_URL_PRODUCTS + 'removeProduct', {
+      "quantity": 1,
+      "code": item.puk.code
+    }, config).then(() => {
+      getProducts().then((response) => {
         setItems(response.data);
-      })
-    }, 1000);
+      });
+    }, (error) => {
+      console.log(error);
+    });
   };
 
+  const deleteItem = (item) => {
+    axios.post(API_URL_PRODUCTS + 'removeProduct', {
+      "quantity": item.quantity,
+      "code": item.puk.code
+    }, config).then(() => {
+      getProducts().then((response) => {
+        setItems(response.data);
+      });
+    }, (error) => {
+      console.log(error);
+    });
+  };
 
   const actions = [
+
     {
-      name: 'Delete',
-      description: 'Supprimer cet item',
+      name: 'Ajouter 1 item',
+      description: 'Ajouter 1 de quantité à cet item',
+      icon: 'plusInCircle',
+      type: 'icon',
+      onClick: addOneItem
+    },
+    {
+      name: 'Supprimer 1 item',
+      description: 'Supprimer 1 de quantité à cet item',
+      icon: 'minusInCircle',
+      type: 'icon',
+      onClick: removeOneItem
+    },
+    {
+      name: 'Supprimer totalement cet item',
+      description: 'Supprimer totalement cet item',
       icon: 'trash',
       type: 'icon',
       color: 'danger',
-      onClick: arrayRemove
+      onClick: deleteItem
     }
   ];
 
@@ -89,32 +110,52 @@ export default function Home() {
     }
   ];
 
-  function inform() {
-    let config = {
-      headers: {
-        Authorization: JSON.parse(localStorage.getItem('foodTrackerAuthorization'))
-      }
-    }
-    console.log(this.files);
+  const handleFileSelect = (e) => {
+    e.preventDefault();
+    file.click();
+  }
+
+  const getProducts = () => {
+    return axios
+        .get(API_URL_PRODUCTS + 'getProducts', config)
+        .then(response => {
+            return response;
+        });
+  }
+
+  function addNewItem(item) {    
     const data = new FormData();
     data.append('image', this.files[0]);
-    data.append("quantity", 2);
-    axios.post('http://localhost:8080/products/addProduct', data, config);
-    this.value = '';
-    setTimeout(() => {
-      ProductService.getProducts().then((response) => {
-        console.log(response.data)
+    data.append("quantity", 1);
+    axios.post(API_URL_PRODUCTS + 'addProduct', data, config).then(() => {
+      getProducts().then((response) => {
         setItems(response.data);
-      })
-    }, 1000);
+      });
+    }, (error) => {
+      console.log(error);
+    });
+    this.value = '';
+  }
 
+  function addOneItem(item) {
+    const data = new FormData();
+    data.append('image', this.files[0]);
+    data.append("quantity", 1);
+    axios.post(API_URL_PRODUCTS + 'addProduct', data, config).then(() => {
+      getProducts().then((response) => {
+        setItems(response.data);
+      });
+    }, (error) => {
+      console.log(error);
+    });
+    this.value = '';
   }
 
   function buildFileSelector() {
     const fileSelector = document.createElement('input');
     fileSelector.setAttribute('type', 'file');
     fileSelector.setAttribute('multiple', 'multiple');
-    fileSelector.onchange = inform;
+    fileSelector.onchange = addNewItem;
     return fileSelector;
   }
 

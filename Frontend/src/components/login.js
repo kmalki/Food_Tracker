@@ -20,8 +20,6 @@ import {
   EuiFlexItem
 } from '@elastic/eui';
 
-// set up cookies
-
 export default class Login extends Component {
   constructor(props) {
     super(props)
