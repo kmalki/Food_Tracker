@@ -18,13 +18,23 @@ import {
   EuiText,
   EuiBasicTable,
   EuiLink,
-  EuiButton
+  EuiButton,
+  EuiModal,
+  EuiOverlayMask,
+  EuiModalHeader,
+  EuiModalHeaderTitle,
+  EuiModalBody,
+  EuiModalFooter,
+  EuiButtonEmpty
 } from '@elastic/eui';
 
 export default function Home() {
 
   const [items, setItems] = useState([]);
   const [file] = useState(buildFileSelector());
+  /*const [isModalVisible, setIsModalVisible] = useState(false);
+  const closeModal = () => setIsModalVisible(false);
+  const showModal = () => setIsModalVisible(true);*/
 
   const config = {
     headers: {
@@ -58,7 +68,7 @@ export default function Home() {
 
   const deleteItem = (item) => {
     axios.post(API_URL_PRODUCTS + 'updateProduct', {
-      "quantity": 0,
+      "quantity": -item.quantity,
       "code": item.puk.code
     }, config).then(() => {
       getProducts().then((response) => {
@@ -124,6 +134,7 @@ export default function Home() {
   }
 
   function addNewItem() {
+    //showModal();
     const data = new FormData();
     data.append('image', this.files[0]);
     data.append("quantity", 1);
@@ -158,8 +169,29 @@ export default function Home() {
     return fileSelector;
   }
 
+  /*let modal;
+  if (isModalVisible) {
+    modal = (
+      <EuiOverlayMask style={{ display: (isModalVisible ? 'block' : 'none') }}>
+        <EuiModal onClose={closeModal}>
+          <EuiModalHeader>
+            <EuiModalHeaderTitle>Modal title</EuiModalHeaderTitle>
+          </EuiModalHeader>
+          <EuiModalBody>{}</EuiModalBody>
+          <EuiModalFooter>
+            <EuiButtonEmpty onClick={closeModal}>Cancel</EuiButtonEmpty>
+            <EuiButton onClick={closeModal} fill>
+              Save
+            </EuiButton>
+          </EuiModalFooter>
+        </EuiModal>
+      </EuiOverlayMask>
+    )
+  }*/
+
   if (AuthService.getCurrentUser()) {
     return (
+      
       <EuiPage>
         <EuiPageBody>
           <EuiPageContent>
