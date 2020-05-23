@@ -35,17 +35,17 @@ export default function Home() {
   const API_URL_PRODUCTS = 'http://localhost:8080/products/';
   useEffect(() => {
     axios
-        .get(API_URL_PRODUCTS + 'getProducts', config)
-        .then((response) => {
-          setItems(response.data);
-    })
+      .get(API_URL_PRODUCTS + 'getProducts', config)
+      .then((response) => {
+        setItems(response.data);
+      })
     // eslint-disable-next-line
   }, [])
 
   const removeOneItem = (item) => {
     console.log(item);
-    axios.post(API_URL_PRODUCTS + 'removeProduct', {
-      "quantity": 1,
+    axios.post(API_URL_PRODUCTS + 'updateProduct', {
+      "quantity": -1,
       "code": item.puk.code
     }, config).then(() => {
       getProducts().then((response) => {
@@ -57,8 +57,8 @@ export default function Home() {
   };
 
   const deleteItem = (item) => {
-    axios.post(API_URL_PRODUCTS + 'removeProduct', {
-      "quantity": item.quantity,
+    axios.post(API_URL_PRODUCTS + 'updateProduct', {
+      "quantity": 0,
       "code": item.puk.code
     }, config).then(() => {
       getProducts().then((response) => {
@@ -117,13 +117,13 @@ export default function Home() {
 
   const getProducts = () => {
     return axios
-        .get(API_URL_PRODUCTS + 'getProducts', config)
-        .then(response => {
-            return response;
-        });
+      .get(API_URL_PRODUCTS + 'getProducts', config)
+      .then(response => {
+        return response;
+      });
   }
 
-  function addNewItem(item) {    
+  function addNewItem() {
     const data = new FormData();
     data.append('image', this.files[0]);
     data.append("quantity", 1);
@@ -138,17 +138,16 @@ export default function Home() {
   }
 
   function addOneItem(item) {
-    const data = new FormData();
-    data.append('image', this.files[0]);
-    data.append("quantity", 1);
-    axios.post(API_URL_PRODUCTS + 'addProduct', data, config).then(() => {
+    axios.post(API_URL_PRODUCTS + 'updateProduct', {
+      "quantity": 1,
+      "code": item.puk.code
+    }, config).then(() => {
       getProducts().then((response) => {
         setItems(response.data);
       });
     }, (error) => {
       console.log(error);
     });
-    this.value = '';
   }
 
   function buildFileSelector() {
@@ -173,6 +172,10 @@ export default function Home() {
                     </EuiTitle>
                   </EuiFlexItem>
                   <EuiFlexItem grow={false}>
+                    <EuiTitle>
+                      <h4>Hey, {AuthService.getCurrentUser()}</h4>
+                    </EuiTitle>
+                    <EuiSpacer size="s" />
                     <EuiButton onClick={() => AuthService.logout()}> Logout </EuiButton>
                   </EuiFlexItem>
                 </EuiFlexGroup>

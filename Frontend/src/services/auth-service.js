@@ -34,7 +34,7 @@ class AuthService {
     }
 
     getCurrentUser() {
-        return localStorage.getItem('foodTrackerAuthorization');
+        return localStorage.getItem('foodTrackerUsername');
     }
 }
 

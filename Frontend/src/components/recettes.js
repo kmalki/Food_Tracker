@@ -106,18 +106,22 @@ export default function Recettes() {
         <EuiPageBody>
           <EuiPageContent>
             <EuiPageContentHeader>
-            <EuiPageContentHeaderSection style={{"width": "100%"}}>
-                  <EuiFlexGroup justifyContent="spaceBetween" style={{"width": "100%"}}>
-                    <EuiFlexItem grow={false} tyle={{ minWidth: 200 }}>
-                      <EuiTitle size='l'>
-                        <h1>Food Tracker</h1>
-                      </EuiTitle>
-                    </EuiFlexItem>
-                    <EuiFlexItem grow={false}>
-                      <EuiButton onClick={() => AuthService.logout()}> Logout </EuiButton>
-                    </EuiFlexItem>
-                  </EuiFlexGroup>
-                </EuiPageContentHeaderSection>
+              <EuiPageContentHeaderSection style={{ "width": "100%" }}>
+                <EuiFlexGroup justifyContent="spaceBetween" style={{ "width": "100%" }}>
+                  <EuiFlexItem grow={false} tyle={{ minWidth: 200 }}>
+                    <EuiTitle size='l'>
+                      <h1>Food Tracker</h1>
+                    </EuiTitle>
+                  </EuiFlexItem>
+                  <EuiFlexItem grow={false}>
+                    <EuiTitle>
+                      <h4>Hey, {AuthService.getCurrentUser()}</h4>
+                    </EuiTitle>
+                    <EuiSpacer size="s"/>
+                    <EuiButton onClick={() => AuthService.logout()}> Logout </EuiButton>
+                  </EuiFlexItem>
+                </EuiFlexGroup>
+              </EuiPageContentHeaderSection>
             </EuiPageContentHeader>
             <EuiPageContentBody>
               <EuiFlexGroup>
@@ -157,7 +161,7 @@ export default function Recettes() {
                   />
                 </EuiFlexItem>
               </EuiFlexGroup>
-              <EuiSpacer/>
+              <EuiSpacer />
               <EuiLink href="/home" >
                 Home
               </EuiLink>{' '}
