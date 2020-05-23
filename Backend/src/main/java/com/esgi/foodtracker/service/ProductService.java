@@ -119,18 +119,19 @@ public class ProductService {
         return productUserRepository.findProductUserDTOSByPuk_Userid(username);
     }
 
-    public void removeOrUpdateProductUser(LightProductDTO product) {
+    public ProductUserDTO updateProductUser(LightProductDTO product) {
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ProductUserDTO productUser = productUserRepository.findProductUserDTOByPuk_UseridAndPuk_Code(
                 username,
                 product.getCode()
         );
-        if(productUser.getQuantity()>product.getQuantity()){
-            productUser.setQuantity(productUser.getQuantity()-product.getQuantity());
+        productUser.setQuantity(productUser.getQuantity()+product.getQuantity());
+        if(productUser.getQuantity()>0){
             productUserRepository.save(productUser);
         }
         else{
             productUserRepository.delete(productUser);
         }
+        return productUser;
     }
 }

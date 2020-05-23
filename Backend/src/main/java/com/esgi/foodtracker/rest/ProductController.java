@@ -52,11 +52,10 @@ public class ProductController {
     }
 
     @Loggable
-    @PostMapping("/removeProduct")
-    public ResponseEntity<String> removeProduct(@RequestBody LightProductDTO product){
-        productService.removeOrUpdateProductUser(product);
-        return ResponseEntity.status(HttpStatus.OK).body(String.format("Product EAN %s and quantity %d removed",
-                product.getCode(), product.getQuantity()));
+    @PostMapping("/updateProduct")
+    public ResponseEntity<ProductUserDTO> removeProduct(@RequestBody LightProductDTO product){
+        ProductUserDTO product_updated = productService.updateProductUser(product);
+        return ResponseEntity.status(HttpStatus.OK).body(product_updated);
     }
 
     @Loggable
