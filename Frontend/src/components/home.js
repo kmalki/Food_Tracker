@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../App.css';
 import CustomCarousel from './customCarousel.js';
 import AuthService from '../services/auth-service';
+import axios from "axios";
 
 import {
   EuiPage,
@@ -22,29 +23,33 @@ import {
 
 export default function Home() {
 
+  const [items, setItems] = useState([]);
+  const config = {
+    headers: {
+      Authorization: JSON.parse(localStorage.getItem('foodTrackerAuthorization'))
+    }
+  }
+
+  const API_URL_PRODUCTS = 'http://localhost:8080/products/';
+  useEffect(() => {
+    axios
+      .get(API_URL_PRODUCTS + 'getProducts', config)
+      .then((response) => {
+        setItems(response.data);
+      })
+    // eslint-disable-next-line
+  }, [])
+
   const columns = [
     {
-      field: 'objet',
-      name: 'Objet',
+      field: 'product_name',
+      name: 'Produit',
     },
     {
       field: 'quantity',
       name: 'Quantité',
     }
   ];
-
-  const items = [{
-    objet: 'Pomme',
-    quantity: 5
-  },
-  {
-    objet: 'Eau',
-    quantity: 6
-  },
-  {
-    objet: 'Steak',
-    quantity: 2
-  }];
 
   if (AuthService.getCurrentUser()) {
     return (

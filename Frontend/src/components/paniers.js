@@ -25,16 +25,23 @@ import {
   EuiModalHeaderTitle,
   EuiModalBody,
   EuiModalFooter,
-  EuiButtonEmpty
+  EuiButtonEmpty,
+  EuiFieldNumber
 } from '@elastic/eui';
 
 export default function Home() {
 
   const [items, setItems] = useState([]);
   const [file] = useState(buildFileSelector());
-  /*const [isModalVisible, setIsModalVisible] = useState(false);
-  const closeModal = () => setIsModalVisible(false);
-  const showModal = () => setIsModalVisible(true);*/
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [quantity, setQuantity] = useState('1');
+  const closeModal = () => {
+    setIsModalVisible(false);
+    let elementsEuiOverlay = document.getElementsByClassName('euiOverlayMask');
+    elementsEuiOverlay[0].remove();
+  }
+
+  const showModal = () => setIsModalVisible(true);
 
   const config = {
     headers: {
@@ -80,7 +87,6 @@ export default function Home() {
   };
 
   const actions = [
-
     {
       name: 'Ajouter 1 item',
       description: 'Ajouter 1 de quantité à cet item',
@@ -133,11 +139,14 @@ export default function Home() {
       });
   }
 
+  function saveAction() {
+    addNewItem();
+  }
+
   function addNewItem() {
-    //showModal();
     const data = new FormData();
-    data.append('image', this.files[0]);
-    data.append("quantity", 1);
+    data.append('image', file.files[0]);
+    data.append("quantity", quantity);
     axios.post(API_URL_PRODUCTS + 'addProduct', data, config).then(() => {
       getProducts().then((response) => {
         setItems(response.data);
@@ -145,7 +154,14 @@ export default function Home() {
     }, (error) => {
       console.log(error);
     });
-    this.value = '';
+    console.log(file.files);
+    file.files.value = '';
+    console.log(file.files);
+    closeModal();
+  }
+
+  function launchModal() {
+    showModal();
   }
 
   function addOneItem(item) {
@@ -165,34 +181,37 @@ export default function Home() {
     const fileSelector = document.createElement('input');
     fileSelector.setAttribute('type', 'file');
     fileSelector.setAttribute('multiple', 'multiple');
-    fileSelector.onchange = addNewItem;
+    fileSelector.onchange = launchModal;
     return fileSelector;
   }
 
-  /*let modal;
-  if (isModalVisible) {
-    modal = (
-      <EuiOverlayMask style={{ display: (isModalVisible ? 'block' : 'none') }}>
-        <EuiModal onClose={closeModal}>
-          <EuiModalHeader>
-            <EuiModalHeaderTitle>Modal title</EuiModalHeaderTitle>
-          </EuiModalHeader>
-          <EuiModalBody>{}</EuiModalBody>
-          <EuiModalFooter>
-            <EuiButtonEmpty onClick={closeModal}>Cancel</EuiButtonEmpty>
-            <EuiButton onClick={closeModal} fill>
-              Save
+  let modal = (
+    <EuiOverlayMask>
+      <EuiModal onClose={closeModal}>
+        <EuiModalHeader>
+          <EuiModalHeaderTitle>Définir la quantité</EuiModalHeaderTitle>
+        </EuiModalHeader>
+        <EuiModalBody>
+          <EuiFieldNumber
+            placeholder="1"
+            value={quantity}
+            onChange={e => setQuantity(parseInt(e.target.value, 10))}
+          />
+        </EuiModalBody>
+        <EuiModalFooter>
+          <EuiButtonEmpty onClick={closeModal}>Cancel</EuiButtonEmpty>
+          <EuiButton onClick={saveAction} fill>
+            Save
             </EuiButton>
-          </EuiModalFooter>
-        </EuiModal>
-      </EuiOverlayMask>
-    )
-  }*/
+        </EuiModalFooter>
+      </EuiModal>
+    </EuiOverlayMask>
+  )
 
   if (AuthService.getCurrentUser()) {
     return (
-      
       <EuiPage>
+        {isModalVisible && modal}
         <EuiPageBody>
           <EuiPageContent>
             <EuiPageContentHeader>
