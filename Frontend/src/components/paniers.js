@@ -3,6 +3,7 @@ import '../App.css';
 import CustomCarousel from './customCarousel.js';
 import AuthService from '../services/auth-service';
 import axios from "axios";
+import ProfilePopover from './profile_popover.js';
 
 import {
   EuiPage,
@@ -221,11 +222,7 @@ export default function Home() {
                     </EuiTitle>
                   </EuiFlexItem>
                   <EuiFlexItem grow={false}>
-                    <EuiTitle>
-                      <h4>Hey, {AuthService.getCurrentUser()}</h4>
-                    </EuiTitle>
-                    <EuiSpacer size="s" />
-                    <EuiButton onClick={() => AuthService.logout()}> Logout </EuiButton>
+                    <ProfilePopover />
                   </EuiFlexItem>
                 </EuiFlexGroup>
               </EuiPageContentHeaderSection>

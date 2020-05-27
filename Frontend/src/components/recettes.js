@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import AuthService from '../services/auth-service';
+import ProfilePopover from './profile_popover.js';
 
 import {
   EuiPage,
@@ -16,8 +17,7 @@ import {
   EuiAccordion,
   EuiDualRange,
   EuiFormHelpText,
-  EuiLink,
-  EuiButton
+  EuiLink
 } from '@elastic/eui';
 
 export default function Recettes() {
@@ -114,11 +114,7 @@ export default function Recettes() {
                     </EuiTitle>
                   </EuiFlexItem>
                   <EuiFlexItem grow={false}>
-                    <EuiTitle>
-                      <h4>Hey, {AuthService.getCurrentUser()}</h4>
-                    </EuiTitle>
-                    <EuiSpacer size="s"/>
-                    <EuiButton onClick={() => AuthService.logout()}> Logout </EuiButton>
+                    <ProfilePopover />
                   </EuiFlexItem>
                 </EuiFlexGroup>
               </EuiPageContentHeaderSection>

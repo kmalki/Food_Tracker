@@ -11,28 +11,32 @@ import Recettes from './components/recettes.js';
 import Paniers from './components/paniers.js';
 import Register from './components/register.js';
 import Login from './components/login.js';
+import Profile from './components/profile.js'
 
 function App() {
 
   return (
     <Router>
-        <Switch>
-          <Route path="/recettes">
-            <Recettes />
-          </Route>
-          <Route path="/paniers">
-            <Paniers />
-          </Route>
-          <Route path="/home">
-            <Home />
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/">
-            <Register />
-          </Route>
-        </Switch>
+      <Switch>
+        <Route path="/home">
+          <Home />
+        </Route>
+        <Route path="/profile">
+          <Profile />
+        </Route>
+        <Route path="/recettes">
+          <Recettes />
+        </Route>
+        <Route path="/paniers">
+          <Paniers />
+        </Route>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <Route path="/">
+          <Register />
+        </Route>
+      </Switch>
     </Router>
   );
 }
