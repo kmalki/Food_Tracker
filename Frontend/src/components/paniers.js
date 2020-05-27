@@ -32,7 +32,7 @@ import {
 export default function Home() {
 
   const [items, setItems] = useState([]);
-  const [file] = useState(buildFileSelector());
+  const [file, setFile] = useState(buildFileSelector());
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [quantity, setQuantity] = useState('1');
   const closeModal = () => {
@@ -60,7 +60,6 @@ export default function Home() {
   }, [])
 
   const removeOneItem = (item) => {
-    console.log(item);
     axios.post(API_URL_PRODUCTS + 'updateProduct', {
       "quantity": -1,
       "code": item.puk.code
@@ -150,13 +149,12 @@ export default function Home() {
     axios.post(API_URL_PRODUCTS + 'addProduct', data, config).then(() => {
       getProducts().then((response) => {
         setItems(response.data);
+        file.remove();
+        setFile(buildFileSelector());
       });
     }, (error) => {
       console.log(error);
     });
-    console.log(file.files);
-    file.files.value = '';
-    console.log(file.files);
     closeModal();
   }
 
@@ -180,7 +178,7 @@ export default function Home() {
   function buildFileSelector() {
     const fileSelector = document.createElement('input');
     fileSelector.setAttribute('type', 'file');
-    fileSelector.setAttribute('multiple', 'multiple');
+    fileSelector.setAttribute('accept', 'image/*');
     fileSelector.onchange = launchModal;
     return fileSelector;
   }
