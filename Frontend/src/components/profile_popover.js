@@ -29,7 +29,6 @@ export default function ProfilePopover() {
         </h4>
       </EuiTitle>
       <EuiSpacer size="s" />
-
     </Fragment>
   );
 

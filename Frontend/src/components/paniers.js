@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import '../App.css';
 import CustomCarousel from './customCarousel.js';
 import AuthService from '../services/auth-service';
@@ -188,15 +188,17 @@ export default function Home() {
   function addNewItem() {
     const data = new FormData();
 
-    if(hasCamera) {
+    if (hasCamera) {
       const file = DataURIToBlob(dataUri);
       data.append('image', file, 'image.jpg');
     }
     else {
+      console.log(file.files[0]);
       data.append('image', file.files[0]);
     }
 
     data.append("quantity", quantity);
+    console.log(file.files[0]);
     axios.post(API_URL_PRODUCTS + 'addProduct', data, config).then(() => {
       getProducts().then((response) => {
         setItems(response.data);
@@ -241,8 +243,14 @@ export default function Home() {
           <EuiModalHeaderTitle>Définir la quantité</EuiModalHeaderTitle>
         </EuiModalHeader>
         <EuiModalBody>
-          <ImagePreview dataUri={dataUri} />
-          <EuiSpacer />
+          {hasCamera ? (
+            <Fragment>
+              <ImagePreview dataUri={dataUri} />
+              <EuiSpacer />
+            </Fragment>
+          ) : (
+              null
+            )}
           <EuiFieldNumber
             placeholder="1"
             value={quantity}
