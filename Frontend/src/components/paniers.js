@@ -172,16 +172,28 @@ export default function Home() {
     addNewItem();
   }
 
-  function DataURIToBlob(dataURI) {
-    const splitDataURI = dataURI.split(',')
-    const byteString = splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1])
-    const mimeString = splitDataURI[0].split(':')[1].split(';')[0]
+  function b64toBlob(b64Data, contentType, sliceSize) {
+    contentType = contentType || '';
+    sliceSize = sliceSize || 512;
 
-    const ia = new Uint8Array(byteString.length)
-    for (let i = 0; i < byteString.length; i++)
-      ia[i] = byteString.charCodeAt(i)
+    var byteCharacters = atob(b64Data);
+    var byteArrays = [];
 
-    return new Blob([ia], { type: mimeString })
+    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      var byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      var byteArray = new Uint8Array(byteNumbers);
+
+      byteArrays.push(byteArray);
+    }
+
+    var blob = new Blob(byteArrays, { type: contentType });
+    return blob;
   }
 
 
@@ -189,8 +201,15 @@ export default function Home() {
     const data = new FormData();
 
     if (hasCamera) {
-      const file = DataURIToBlob(dataUri);
-      data.append('image', file, 'image.jpg');
+      // Split the base64 string in data and contentType
+      var block = dataUri.split(";");
+      // Get the content type of the image
+      var contentType = block[0].split(":")[1];
+      // get the real base64 content of the file
+      var realData = block[1].split(",")[1];
+      // Convert it to a blob to upload
+      var blob = b64toBlob(realData, contentType);
+      data.append('image', blob);
     }
     else {
       console.log(file.files[0]);
@@ -198,7 +217,6 @@ export default function Home() {
     }
 
     data.append("quantity", quantity);
-    console.log(file.files[0]);
     axios.post(API_URL_PRODUCTS + 'addProduct', data, config).then(() => {
       getProducts().then((response) => {
         setItems(response.data);
