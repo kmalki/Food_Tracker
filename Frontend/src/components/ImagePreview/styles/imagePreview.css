@@ -1,0 +1,26 @@
+.demo-image-preview {
+  position: relative;
+  text-align: center;
+}
+
+.demo-image-preview > img {
+  display: block;
+  max-width:230px;
+  max-height:260px;
+  width: auto;
+  height: auto;
+  margin: auto;
+}
+
+@media(max-width:768px){
+  .demo-image-preview > img {
+    width: 100%;
+    max-height: 300px;
+  }
+}
+
+/* fullscreen enable by props */
+.demo-image-preview-fullscreen > img {
+  width: 100vw;
+  height:100vh;
+}
