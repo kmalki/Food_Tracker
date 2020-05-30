@@ -116,6 +116,7 @@ export default function Home() {
     setIsModalSpeechVisible(false);
     let elementsEuiOverlay = document.getElementsByClassName('euiOverlayMask');
     elementsEuiOverlay[0].remove();
+    setcodeValue('');
   }
 
   function handleToastError(code) {
