@@ -7,6 +7,8 @@ import ProfilePopover from './profile_popover.js';
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import ImagePreview from './ImagePreview';
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+import DictateButton from 'react-dictate-button';
 
 import {
   EuiPage,
@@ -30,7 +32,10 @@ import {
   EuiModalBody,
   EuiModalFooter,
   EuiButtonEmpty,
-  EuiFieldNumber
+  EuiFieldNumber,
+  EuiGlobalToastList,
+  EuiFieldText,
+  EuiLoadingChart
 } from '@elastic/eui';
 
 export default function Home() {
@@ -38,14 +43,92 @@ export default function Home() {
   const [items, setItems] = useState([]);
   const [file, setFile] = useState(buildFileSelector());
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalSpeechVisible, setIsModalSpeechVisible] = useState(false);
+  const [codeValue, setcodeValue] = useState('');
   const [quantity, setQuantity] = useState('1');
   const [dataUri, setDataUri] = useState('');
   const [photoMode, setphotoMode] = useState(false);
   const [hasCamera, sethasCamera] = useState(false);
+  const [toasts, setToasts] = useState([]);
+  const [isDictionWorking, setisDictionWorking] = useState(false);
+
+  const toastsList = [
+    {
+      id: "0",
+      title: 'Item(s) ajouté(s) !',
+      color: 'success',
+      text: <p>Item(s) ajouté(s) avec succès</p>
+    },
+    {
+      id: "1",
+      title: 'Item(s) supprimé(s) !',
+      color: 'success',
+      text: <p>Item(s) supprimé(s) avec succès</p>
+    },
+    {
+      id: "2",
+      title: 'Erreur',
+      color: 'danger',
+      iconType: 'help',
+      text: <p>L'item n'a pas pu être ajouté car le code n'est pas détécté, essayez de un angle et de meilleurs conditions d'éclairages</p>
+    },
+    {
+      id: "3",
+      title: 'Erreur',
+      color: 'danger',
+      iconType: 'help',
+      text: <p>L'item n'a pas pu être ajouté car le produit n'est pas en base</p>
+    },
+    {
+      id: "4",
+      title: 'Erreur',
+      color: 'danger',
+      iconType: 'help',
+      text: <p>Serveur non joignable</p>
+    },
+    {
+      id: "5",
+      title: 'Erreur',
+      color: 'danger',
+      iconType: 'help',
+      text: <p>La suppression n'a pas pu s'effectuer (voir la console pour plus de détails)</p>
+    },
+    {
+      id: "6",
+      title: 'Erreur',
+      color: 'danger',
+      iconType: 'help',
+      text: <p>L'ajout n'a pas pu s'effectuer (voir la console pour plus de détails)</p>
+    }
+  ];
+
+  const removeToast = removedToast => {
+    setToasts(toasts.filter(toast => toast.id !== removedToast.id));
+  };
+
   const closeModal = () => {
     setIsModalVisible(false);
     let elementsEuiOverlay = document.getElementsByClassName('euiOverlayMask');
     elementsEuiOverlay[0].remove();
+  }
+
+  const closeSpeechModal = () => {
+    setIsModalSpeechVisible(false);
+    let elementsEuiOverlay = document.getElementsByClassName('euiOverlayMask');
+    elementsEuiOverlay[0].remove();
+  }
+
+  function handleToastError(code) {
+    switch (code) {
+      case 404:
+        setToasts(toasts.concat(toastsList[3]));
+        break;
+      case 400:
+        setToasts(toasts.concat(toastsList[2]));
+        break;
+      default:
+        setToasts(toasts.concat(toastsList[4]));
+    }
   }
 
   function handleTakePhoto(dataUri) {
@@ -55,6 +138,7 @@ export default function Home() {
   }
 
   const showModal = () => setIsModalVisible(true);
+  const showModalSpeech = () => setIsModalSpeechVisible(true);
 
   const config = {
     headers: {
@@ -62,12 +146,24 @@ export default function Home() {
     }
   }
 
+  const {
+    SpeechGrammarList,
+    SpeechRecognition
+  } = createPonyfill({
+    credentials: {
+      region: 'westus',
+      subscriptionKey: '58f7206e30fe4f56961f7d7d4b4f446c'
+    }
+  });
+
   const API_URL_PRODUCTS = 'http://localhost:8080/products/';
   useEffect(() => {
     axios
       .get(API_URL_PRODUCTS + 'getProducts', config)
       .then((response) => {
         setItems(response.data);
+      }, () => {
+        handleToastError();
       })
 
     navigator.getMedia = (navigator.getUserMedia ||
@@ -91,9 +187,11 @@ export default function Home() {
     }, config).then(() => {
       getProducts().then((response) => {
         setItems(response.data);
+        setToasts(toasts.concat(toastsList[1]));
       });
     }, (error) => {
       console.log(error);
+      setToasts(toasts.concat(toastsList[5]));
     });
   };
 
@@ -104,9 +202,11 @@ export default function Home() {
     }, config).then(() => {
       getProducts().then((response) => {
         setItems(response.data);
+        setToasts(toasts.concat(toastsList[1]));
       });
     }, (error) => {
       console.log(error);
+      setToasts(toasts.concat(toastsList[5]));
     });
   };
 
@@ -172,6 +272,12 @@ export default function Home() {
     addNewItem();
   }
 
+  function saveActionManuel() {
+    closeSpeechModal();
+    console.log(codeValue);
+    console.log(quantity);
+  }
+
   function b64toBlob(b64Data, contentType, sliceSize) {
     contentType = contentType || '';
     sliceSize = sliceSize || 512;
@@ -196,6 +302,9 @@ export default function Home() {
     return blob;
   }
 
+  function dictateClick() {
+    setisDictionWorking(true);
+  }
 
   function addNewItem() {
     const data = new FormData();
@@ -212,7 +321,6 @@ export default function Home() {
       data.append('image', blob);
     }
     else {
-      console.log(file.files[0]);
       data.append('image', file.files[0]);
     }
 
@@ -222,11 +330,16 @@ export default function Home() {
         setItems(response.data);
         file.remove();
         setFile(buildFileSelector());
+        closeModal();
+        setToasts(toasts.concat(toastsList[0]));
       });
     }, (error) => {
       console.log(error);
+      file.remove();
+      setFile(buildFileSelector());
+      closeModal();
+      showModalSpeech();
     });
-    closeModal();
   }
 
   function launchModal() {
@@ -240,11 +353,23 @@ export default function Home() {
     }, config).then(() => {
       getProducts().then((response) => {
         setItems(response.data);
+        setToasts(toasts.concat(toastsList[0]));
       });
     }, (error) => {
       console.log(error);
+      setToasts(toasts.concat(toastsList[6]));
     });
   }
+
+  function onDictate(text) {
+    let finalText = text.substring(0, text.length - 1);
+    setisDictionWorking(false);
+    setcodeValue(finalText);
+  }
+
+  const onChangeCode = e => {
+    setcodeValue(e.target.value);
+  };
 
   function buildFileSelector() {
     const fileSelector = document.createElement('input');
@@ -285,6 +410,70 @@ export default function Home() {
     </EuiOverlayMask>
   )
 
+  let modalSpeech = (
+    <EuiOverlayMask>
+      <EuiModal onClose={closeSpeechModal}>
+        <EuiModalHeader>
+          <EuiModalHeaderTitle>Code barre non reconnu</EuiModalHeaderTitle>
+        </EuiModalHeader>
+        <EuiModalBody>
+          <EuiText size="s">
+            <p>
+              Il semblerait que le code barre ne soit pas reconnu, vous pouvez tenter de recommencer en essayant de bien centré le code barre ainsi que
+              d'augmenter la luminosité de l'environnement dans lequel vous vous trouvez.
+            </p>
+            <p>
+              Sinon vous pouvez également utiliser la reconnaissance vocale et épeler le code barre en cliquant juste en dessous
+            </p>
+            <DictateButton
+              onDictate={({ result }) => onDictate(result.transcript)}
+              speechGrammarList={SpeechGrammarList}
+              speechRecognition={SpeechRecognition}
+              onClick={dictateClick}
+              lang={'fr-FR'}
+            >
+              {isDictionWorking ? 'Diction en cours, vous pouvez parler' : 'Cliquer ici pour commencer la diction'}
+            </DictateButton>
+            {isDictionWorking ? (
+            <Fragment>
+              <EuiLoadingChart style={{ marginLeft: '10px' }} size="xl" mono />
+            </Fragment>
+          ) : (
+              null
+            )}
+            <EuiSpacer />
+            <p>
+              Il est toujours possible de rentrer le code barre à la main dans le champs prévu à cet effet
+            </p>
+          </EuiText>
+          <EuiSpacer />
+          <EuiFieldText
+            placeholder="Code barre"
+            value={codeValue}
+            onChange={e => onChangeCode(e)}
+            aria-label="codebarre"
+          />
+          <EuiSpacer />
+          <EuiTitle size="s">
+            <h3>Quantité de l'item à ajouter</h3>
+          </EuiTitle>
+          <EuiSpacer />
+          <EuiFieldNumber
+            placeholder="1"
+            value={quantity}
+            onChange={e => setQuantity(parseInt(e.target.value, 10))}
+          />
+        </EuiModalBody>
+        <EuiModalFooter>
+          <EuiButtonEmpty onClick={closeSpeechModal}>Cancel</EuiButtonEmpty>
+          <EuiButton onClick={saveActionManuel} fill>
+            Save
+          </EuiButton>
+        </EuiModalFooter>
+      </EuiModal>
+    </EuiOverlayMask>
+  )
+
   if (AuthService.getCurrentUser()) {
 
     if (photoMode) {
@@ -302,7 +491,13 @@ export default function Home() {
     else {
       return (
         <EuiPage>
+          <EuiGlobalToastList
+            toasts={toasts}
+            dismissToast={removeToast}
+            toastLifeTimeMs={6000}
+          />
           {isModalVisible && modal}
+          {isModalSpeechVisible && modalSpeech}
           <EuiPageBody>
             <EuiPageContent>
               <EuiPageContentHeader>
