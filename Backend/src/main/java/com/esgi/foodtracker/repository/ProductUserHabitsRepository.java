@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductUserHabitsRepository extends CassandraRepository<ProductUserHabitDTO, ProductUserKey> {
-    @AllowFiltering
+
     ProductUserHabitDTO findProductUserHabitDTOByPuk_UseridAndPuk_Code(String username, String code);
 }

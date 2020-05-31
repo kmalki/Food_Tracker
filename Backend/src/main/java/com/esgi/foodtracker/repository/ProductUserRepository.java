@@ -11,9 +11,8 @@ import java.util.List;
 
 @Repository
 public interface ProductUserRepository extends CassandraRepository<ProductUserDTO, ProductUserKey> {
-    @AllowFiltering
+
     ProductUserDTO findProductUserDTOByPuk_UseridAndPuk_Code(String userid, String code);
 
-    @AllowFiltering
     List<ProductUserDTO> findProductUserDTOSByPuk_Userid(String userid);
 }

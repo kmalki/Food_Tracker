@@ -27,6 +27,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Loggable
     @GetMapping("/getProducts")
     public ResponseEntity<List<ProductUserDTO>> getProduct(){
         List<ProductUserDTO> products = productService.getUserProducts();
@@ -52,8 +53,21 @@ public class ProductController {
     }
 
     @Loggable
+    @PostMapping("/addProductWithCode")
+    public ResponseEntity<String> addProductWithCode(@RequestBody LightProductDTO product) {
+        ProductDTO products = productRepository.findProductDTOByCode(product.getCode());
+        if(products==null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    String.format("Product not found with EAN %s", product.getCode()));
+        }
+        productService.insertOrUpdateProductUser(products, product.getQuantity());
+        productService.insertOrUpdateProductUserHabits(products, product.getQuantity());
+        return ResponseEntity.status(HttpStatus.OK).body(String.format("Product EAN %s added", product.getCode()));
+    }
+
+    @Loggable
     @PostMapping("/updateProduct")
-    public ResponseEntity<ProductUserDTO> removeProduct(@RequestBody LightProductDTO product){
+    public ResponseEntity<ProductUserDTO> updateProduct(@RequestBody LightProductDTO product){
         ProductUserDTO product_updated = productService.updateProductUser(product);
         return ResponseEntity.status(HttpStatus.OK).body(product_updated);
     }
