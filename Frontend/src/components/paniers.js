@@ -420,7 +420,7 @@ export default function Home() {
         <EuiModalBody>
           <EuiText size="s">
             <p>
-              Il semblerait que le code barre ne soit pas reconnu, vous pouvez tenter de recommencer en essayant de bien centré le code barre ainsi que
+              Il semblerait que le code barre ne soit pas reconnu, vous pouvez tenter de recommencer en essayant de bien centrer le code barre ainsi que
               d'augmenter la luminosité de l'environnement dans lequel vous vous trouvez.
             </p>
             <p>
