@@ -152,8 +152,8 @@ export default function Home() {
     SpeechRecognition
   } = createPonyfill({
     credentials: {
-      region: 'westus',
-      subscriptionKey: '58f7206e30fe4f56961f7d7d4b4f446c'
+      region: 'westeurope',
+      subscriptionKey: 'c42e15d685404d84a83cd9290604ed93'
     }
   });
 
@@ -275,8 +275,18 @@ export default function Home() {
 
   function saveActionManuel() {
     closeSpeechModal();
-    console.log(codeValue);
-    console.log(quantity);
+    axios.post(API_URL_PRODUCTS + 'addProductWithCode', {
+      "quantity": quantity,
+      "code": codeValue
+    }, config).then(() => {
+      getProducts().then((response) => {
+        setItems(response.data);
+        setToasts(toasts.concat(toastsList[0]));
+      });
+    }, (error) => {
+      console.log(error);
+      setToasts(toasts.concat(toastsList[6]));
+    });
   }
 
   function b64toBlob(b64Data, contentType, sliceSize) {
@@ -336,10 +346,23 @@ export default function Home() {
       });
     }, (error) => {
       console.log(error);
-      file.remove();
-      setFile(buildFileSelector());
-      closeModal();
-      showModalSpeech();
+      if (error.response.status === 404) {
+        file.remove();
+        setFile(buildFileSelector());
+        closeModal();
+        setToasts(toasts.concat(toastsList[3]));
+      } else if (error.response.status === 400) {
+        file.remove();
+        setFile(buildFileSelector());
+        closeModal();
+        showModalSpeech();
+      }
+      else {
+        file.remove();
+        setFile(buildFileSelector());
+        closeModal();
+        setToasts(toasts.concat(toastsList[6]));
+      }
     });
   }
 
