@@ -109,13 +109,13 @@ export default function Home() {
   const closeModal = () => {
     setIsModalVisible(false);
     let elementsEuiOverlay = document.getElementsByClassName('euiOverlayMask');
-    elementsEuiOverlay[0].remove();
+    if(elementsEuiOverlay[0]) elementsEuiOverlay[0].remove();
   }
 
   const closeSpeechModal = () => {
     setIsModalSpeechVisible(false);
     let elementsEuiOverlay = document.getElementsByClassName('euiOverlayMask');
-    elementsEuiOverlay[0].remove();
+    if(elementsEuiOverlay[0]) elementsEuiOverlay[0].remove();
     setcodeValue('');
   }
 
