@@ -51,6 +51,7 @@ export default function Home() {
   const [hasCamera, sethasCamera] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [isDictionWorking, setisDictionWorking] = useState(false);
+  const [IsModalManualVisible, setIsModalManualVisible] = useState(false);
 
   const toastsList = [
     {
@@ -109,13 +110,20 @@ export default function Home() {
   const closeModal = () => {
     setIsModalVisible(false);
     let elementsEuiOverlay = document.getElementsByClassName('euiOverlayMask');
-    if(elementsEuiOverlay[0]) elementsEuiOverlay[0].remove();
+    if (elementsEuiOverlay[0]) elementsEuiOverlay[0].remove();
   }
 
   const closeSpeechModal = () => {
     setIsModalSpeechVisible(false);
     let elementsEuiOverlay = document.getElementsByClassName('euiOverlayMask');
-    if(elementsEuiOverlay[0]) elementsEuiOverlay[0].remove();
+    if (elementsEuiOverlay[0]) elementsEuiOverlay[0].remove();
+    setcodeValue('');
+  }
+
+  const closeManualModal = () => {
+    setIsModalManualVisible(false);
+    let elementsEuiOverlay = document.getElementsByClassName('euiOverlayMask');
+    if (elementsEuiOverlay[0]) elementsEuiOverlay[0].remove();
     setcodeValue('');
   }
 
@@ -274,7 +282,8 @@ export default function Home() {
   }
 
   function saveActionManuel() {
-    closeSpeechModal();
+    if (isModalSpeechVisible) closeSpeechModal();
+    if (IsModalManualVisible) closeManualModal();
     axios.post(API_URL_PRODUCTS + 'addProductWithCode', {
       "quantity": quantity,
       "code": codeValue
@@ -285,7 +294,14 @@ export default function Home() {
       });
     }, (error) => {
       console.log(error);
-      setToasts(toasts.concat(toastsList[6]));
+      if (error.response) {
+        if (error.response.status === 404) {
+          setToasts(toasts.concat(toastsList[3]));
+        }
+      }
+      else {
+        setToasts(toasts.concat(toastsList[6]));
+      }
     });
   }
 
@@ -345,17 +361,19 @@ export default function Home() {
         setToasts(toasts.concat(toastsList[0]));
       });
     }, (error) => {
-      console.log(error);
-      if (error.response.status === 404) {
-        file.remove();
-        setFile(buildFileSelector());
-        closeModal();
-        setToasts(toasts.concat(toastsList[3]));
-      } else if (error.response.status === 400) {
-        file.remove();
-        setFile(buildFileSelector());
-        closeModal();
-        showModalSpeech();
+      console.log(error.response);
+      if (error.response) {
+        if (error.response.status === 404) {
+          file.remove();
+          setFile(buildFileSelector());
+          closeModal();
+          setToasts(toasts.concat(toastsList[3]));
+        } else if (error.response.status === 400) {
+          file.remove();
+          setFile(buildFileSelector());
+          closeModal();
+          showModalSpeech();
+        }
       }
       else {
         file.remove();
@@ -368,6 +386,10 @@ export default function Home() {
 
   function launchModal() {
     showModal();
+  }
+
+  function openModalManually() {
+    setIsModalManualVisible(true);
   }
 
   function addOneItem(item) {
@@ -434,6 +456,28 @@ export default function Home() {
     </EuiOverlayMask>
   )
 
+  let dictate = (
+    <Fragment>
+      <DictateButton
+        onDictate={({ result }) => onDictate(result.transcript)}
+        speechGrammarList={SpeechGrammarList}
+        speechRecognition={SpeechRecognition}
+        onClick={dictateClick}
+        lang={'fr-FR'}
+        className="euiTitle euiTitle--small"
+      >
+        {isDictionWorking ? 'Diction en cours, vous pouvez parler' : 'Cliquer ici pour commencer la diction'}
+      </DictateButton>
+      {isDictionWorking ? (
+        <Fragment>
+          <EuiLoadingChart style={{ marginLeft: '10px' }} size="xl" mono />
+        </Fragment>
+      ) : (
+          null
+        )}
+    </Fragment>
+  )
+
   let modalSpeech = (
     <EuiOverlayMask>
       <EuiModal onClose={closeSpeechModal}>
@@ -449,27 +493,13 @@ export default function Home() {
             <p>
               Sinon vous pouvez également utiliser la reconnaissance vocale et épeler le code barre en cliquant juste en dessous
             </p>
-            <DictateButton
-              onDictate={({ result }) => onDictate(result.transcript)}
-              speechGrammarList={SpeechGrammarList}
-              speechRecognition={SpeechRecognition}
-              onClick={dictateClick}
-              lang={'fr-FR'}
-            >
-              {isDictionWorking ? 'Diction en cours, vous pouvez parler' : 'Cliquer ici pour commencer la diction'}
-            </DictateButton>
-            {isDictionWorking ? (
-            <Fragment>
-              <EuiLoadingChart style={{ marginLeft: '10px' }} size="xl" mono />
-            </Fragment>
-          ) : (
-              null
-            )}
+            {dictate}
             <EuiSpacer />
             <p>
               Il est toujours possible de rentrer le code barre à la main dans le champs prévu à cet effet
             </p>
           </EuiText>
+
           <EuiSpacer />
           <EuiFieldText
             placeholder="Code barre"
@@ -490,6 +520,48 @@ export default function Home() {
         </EuiModalBody>
         <EuiModalFooter>
           <EuiButtonEmpty onClick={closeSpeechModal}>Cancel</EuiButtonEmpty>
+          <EuiButton onClick={saveActionManuel} fill>
+            Save
+          </EuiButton>
+        </EuiModalFooter>
+      </EuiModal>
+    </EuiOverlayMask>
+  )
+
+  let modalManually = (
+    <EuiOverlayMask>
+      <EuiModal onClose={closeManualModal}>
+        <EuiModalHeader>
+          <EuiModalHeaderTitle>Ajouter un produit</EuiModalHeaderTitle>
+        </EuiModalHeader>
+        <EuiModalBody>
+          <EuiText size="s">
+            <p>
+              Vous pouvez ajouter un produit en dictant le numéro associé à son code barre ou bien rentrer le code manuellement.
+            </p>
+          </EuiText>
+          <EuiSpacer />
+          {dictate}
+          <EuiSpacer />
+          <EuiFieldText
+            placeholder="Code barre"
+            value={codeValue}
+            onChange={e => onChangeCode(e)}
+            aria-label="codebarre"
+          />
+          <EuiSpacer />
+          <EuiTitle size="s">
+            <h3>Quantité de l'item à ajouter</h3>
+          </EuiTitle>
+          <EuiSpacer />
+          <EuiFieldNumber
+            placeholder="1"
+            value={quantity}
+            onChange={e => setQuantity(parseInt(e.target.value, 10))}
+          />
+        </EuiModalBody>
+        <EuiModalFooter>
+          <EuiButtonEmpty onClick={closeManualModal}>Cancel</EuiButtonEmpty>
           <EuiButton onClick={saveActionManuel} fill>
             Save
           </EuiButton>
@@ -522,6 +594,7 @@ export default function Home() {
           />
           {isModalVisible && modal}
           {isModalSpeechVisible && modalSpeech}
+          {IsModalManualVisible && modalManually}
           <EuiPageBody>
             <EuiPageContent>
               <EuiPageContentHeader>
@@ -550,11 +623,24 @@ export default function Home() {
                       hasActions={true}
                     />
                     <EuiSpacer />
+                    <EuiTitle style={{ margin: 'auto' }} size='xxs'>
+                      <h4>Ajouter un aliment :</h4>
+                    </EuiTitle>
+                    <EuiSpacer />
                     <EuiFlexGroup justifyContent="spaceAround">
                       <EuiFlexItem grow={false}>
-                        <EuiButton iconType="plusInCircleFilled" onClick={handleFileSelect}>
-                          Ajouter un article
-                      </EuiButton>
+                        <EuiFlexGroup justifyContent="spaceAround">
+                          <EuiFlexItem>
+                            <EuiButton iconType="plusInCircleFilled" onClick={handleFileSelect}>
+                              En scannant
+                            </EuiButton>
+                          </EuiFlexItem>
+                          <EuiFlexItem>
+                            <EuiButton iconType="plusInCircleFilled" onClick={openModalManually}>
+                              En dictant/manuellement
+                            </EuiButton>
+                          </EuiFlexItem>
+                        </EuiFlexGroup>
                       </EuiFlexItem>
                     </EuiFlexGroup>
                   </EuiFlexItem>
