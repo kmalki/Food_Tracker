@@ -17,7 +17,8 @@ import {
   EuiAccordion,
   EuiDualRange,
   EuiFormHelpText,
-  EuiLink
+  EuiLink,
+  EuiSwitch
 } from '@elastic/eui';
 
 export default function Recettes() {
@@ -51,9 +52,13 @@ export default function Recettes() {
 
   const [items] = useState(recettes);
   const [isLoading] = useState(false);
-
-
   const [value, setValue] = useState(['', '']);
+
+  const [checked, setChecked] = useState(false);
+
+  const onChangeSwitch = e => {
+    setChecked(e.target.checked);
+  };
 
   const onChange = value => {
     setValue(value);
@@ -125,6 +130,12 @@ export default function Recettes() {
                   <EuiTitle size='m'>
                     <h3>Recettes</h3>
                   </EuiTitle>
+                  <EuiSpacer />
+                  <EuiSwitch
+                    label="N'afficher que des recettes faisables avec les aliments disponibles"
+                    checked={checked}
+                    onChange={e => onChangeSwitch(e)}
+                  />
                   <EuiSpacer />
                   <EuiAccordion
                     id="accordion"

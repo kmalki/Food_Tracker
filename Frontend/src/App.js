@@ -12,7 +12,7 @@ import Paniers from './components/paniers.js';
 import Register from './components/register.js';
 import Login from './components/login.js';
 import Profile from './components/profile.js'
-
+import Consumed from './components/consumed.js'
 function App() {
 
   return (
@@ -32,6 +32,9 @@ function App() {
         </Route>
         <Route path="/login">
           <Login />
+        </Route>
+        <Route path="/consumed">
+          <Consumed />
         </Route>
         <Route path="/">
           <Register />
