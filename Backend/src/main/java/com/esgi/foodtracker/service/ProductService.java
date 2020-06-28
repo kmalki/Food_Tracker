@@ -2,6 +2,7 @@ package com.esgi.foodtracker.service;
 
 import com.esgi.foodtracker.model.*;
 import com.esgi.foodtracker.repository.ProductRepository;
+import com.esgi.foodtracker.repository.ProductUserDailyHabitsRepository;
 import com.esgi.foodtracker.repository.ProductUserHabitsRepository;
 import com.esgi.foodtracker.repository.ProductUserRepository;
 import com.google.zxing.*;
@@ -31,6 +32,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ProductUserDailyHabitsRepository productUserDailyHabitsRepository;
 
     @Autowired
     private ProductUserHabitsRepository productUserHabitsRepository;
@@ -133,5 +137,33 @@ public class ProductService {
             productUserRepository.delete(productUser);
         }
         return productUser;
+    }
+
+    public void updateListUser(List<LightProductDTO> products) {
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ProductUserDTO productUser;
+        for (LightProductDTO product  : products) {
+            productUser = productUserRepository.findProductUserDTOByPuk_UseridAndPuk_Code(
+                    username,
+                    product.getCode()
+            );
+            productUser.setQuantity(productUser.getQuantity()-product.getQuantity());
+            if(productUser.getQuantity()>0){
+                productUserRepository.save(productUser);
+            }
+            else{
+                productUserRepository.delete(productUser);
+            }
+            ProductDTO productFull = productRepository.findProductDTOByCode(product.getCode());
+            productUserDailyHabitsRepository.save(new ProductUserDailyHabitDTO(
+                    new ProductUserKey(
+                            username,
+                            product.getCode()
+                    ),
+                    productFull.getProduct_name(),
+                    productFull.getCategory(),
+                    product.getQuantity()
+            ));
+        }
     }
 }

@@ -73,6 +73,13 @@ public class ProductController {
     }
 
     @Loggable
+    @PostMapping("/updateList")
+    public ResponseEntity<String> updateList(@RequestBody List<LightProductDTO> products){
+        productService.updateListUser(products);
+        return ResponseEntity.status(HttpStatus.OK).body("List updated");
+    }
+
+    @Loggable
     @PostMapping("/createProduct")
     public ResponseEntity<String> createProduct(@RequestBody ProductDTO product){
         productRepository.save(product);
