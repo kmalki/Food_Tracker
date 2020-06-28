@@ -134,6 +134,9 @@ export default function Consumed() {
     items.map(item => ({ code: item.code, quantity: item.quantity })), config)
     .then((response) => {
       setToasts(toasts.concat(toastsList[8]));
+      setTimeout(() => {
+        window.location.href = '/home';
+      }, 2000);
     }, (error) => {
       console.log(error);
       if (error.response) {
