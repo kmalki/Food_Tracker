@@ -18,12 +18,14 @@ import {
   EuiBasicTable,
   EuiLink,
   EuiGlobalToastList,
+  EuiButton
 } from '@elastic/eui';
 
 export default function Consumed() {
 
   const [items, setItems] = useState([]);
   const [toasts, setToasts] = useState([]);
+  const API_URL_PRODUCTS = 'http://localhost:8080/products/';
 
   const toastsList = [
     {
@@ -71,14 +73,20 @@ export default function Consumed() {
       title: 'Erreur',
       color: 'danger',
       iconType: 'help',
-      text: <p>L'ajout n'a pas pu s'effectuer (voir la console pour plus de détails)</p>
+      text: <p>Une erreur s'est produite (voir la console pour plus de détails)</p>
     },
     {
       id: "7",
       title: 'Erreur',
       color: 'danger',
       iconType: 'help',
-      text: <p>Impossible de diminuer la quanité d'avantage</p>
+      text: <p>Impossible de diminuer la quanité davantage</p>
+    },
+    {
+      id: "8",
+      title: 'Succès',
+      color: 'success',
+      text: <p>Liste mise à jour avec succès</p>
     }
   ];
 
@@ -108,7 +116,6 @@ export default function Consumed() {
     }
   }
 
-  const API_URL_PRODUCTS = 'http://localhost:8080/products/';
   useEffect(() => {
     axios
       .get(API_URL_PRODUCTS + 'getProducts', config)
@@ -121,20 +128,40 @@ export default function Consumed() {
     // eslint-disable-next-line
   }, [])
 
+  function updateProducts() {
+    
+    axios.post(API_URL_PRODUCTS + 'updateList', 
+    items.map(item => ({ code: item.code, quantity: item.quantity })), config)
+    .then((response) => {
+      setToasts(toasts.concat(toastsList[8]));
+    }, (error) => {
+      console.log(error);
+      if (error.response) {
+        if (error.response.status === 404) {
+          setToasts(toasts.concat(toastsList[3]));
+        }
+      }
+      else {
+        setToasts(toasts.concat(toastsList[6]));
+      }
+    });
+    
+  }
+
   const addItem = item => {
-    const elementsIndex = items.findIndex(element => element.code ===  item.code);
+    const elementsIndex = items.findIndex(element => element.code === item.code);
     let newArray = [...items];
-    newArray[elementsIndex] = {...newArray[elementsIndex], quantity: newArray[elementsIndex].quantity + 1};
+    newArray[elementsIndex] = { ...newArray[elementsIndex], quantity: newArray[elementsIndex].quantity + 1 };
     setItems(newArray);
   };
 
   const removeItem = item => {
-    if(item.quantity > 0) {
-      const elementsIndex = items.findIndex(element => element.code ===  item.code);
+    if (item.quantity > 0) {
+      const elementsIndex = items.findIndex(element => element.code === item.code);
       let newArray = [...items];
-      newArray[elementsIndex] = {...newArray[elementsIndex], quantity: newArray[elementsIndex].quantity - 1};
+      newArray[elementsIndex] = { ...newArray[elementsIndex], quantity: newArray[elementsIndex].quantity - 1 };
       setItems(newArray);
-    } 
+    }
     else {
       handleToastError(99);
     }
@@ -208,6 +235,10 @@ export default function Consumed() {
                   />
                 </EuiFlexItem>
               </EuiFlexGroup>
+              <EuiSpacer />
+              <EuiButton onClick={updateProducts} fill>
+                Mettre à jour
+            </EuiButton>
               <EuiSpacer />
               <EuiLink href="/home" >
                 Home
