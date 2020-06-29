@@ -16,18 +16,25 @@ public class ProductUserHabitDTO {
     private int quantity;
     @Column
     private String brand;
+    @Column
+    private int age;
+    @Column
+    private String sexe;
 
     public ProductUserHabitDTO() {
     }
 
     public ProductUserHabitDTO(ProductUserKey puk,
                                String product_name,
-                               String category, String brand, int quantity) {
+                               String category, String brand, int quantity,
+                               int age, String sexe) {
         this.puk = puk;
         this.product_name = product_name;
         this.category = category;
         this.quantity = quantity;
         this.brand = brand;
+        this.age = age;
+        this.sexe = sexe;
     }
 
     public ProductUserKey getPuk() {
@@ -70,6 +77,22 @@ public class ProductUserHabitDTO {
         this.brand = brand;
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getSexe() {
+        return sexe;
+    }
+
+    public void setSexe(String sexe) {
+        this.sexe = sexe;
+    }
+
     @Override
     public String toString() {
         return "ProductUserHabitDTO{" +
@@ -78,6 +101,8 @@ public class ProductUserHabitDTO {
                 ", category='" + category + '\'' +
                 ", quantity=" + quantity +
                 ", brand='" + brand + '\'' +
+                ", age=" + age +
+                ", sexe='" + sexe + '\'' +
                 '}';
     }
 }

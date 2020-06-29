@@ -3,7 +3,9 @@ package com.esgi.foodtracker.rest;
 import com.esgi.foodtracker.model.LightProductDTO;
 import com.esgi.foodtracker.model.ProductDTO;
 import com.esgi.foodtracker.model.ProductUserDTO;
+import com.esgi.foodtracker.model.ProductUserHabitDTO;
 import com.esgi.foodtracker.repository.ProductRepository;
+import com.esgi.foodtracker.repository.ProductUserHabitsRepository;
 import com.esgi.foodtracker.service.ProductService;
 import com.github.rozidan.springboot.logger.Loggable;
 import org.slf4j.Logger;
@@ -85,5 +87,18 @@ public class ProductController {
         productRepository.save(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(String.format("Product EAN %s created",
                 product.getCode()));
+    }
+
+    @Autowired
+    private ProductUserHabitsRepository productUserHabitsRepository;
+
+    @Loggable
+    @GetMapping("/test")
+    public void test(){
+        List<ProductUserHabitDTO> l = productUserHabitsRepository.findAll();
+        for(ProductUserHabitDTO product: l){
+            product.setAge(23);
+            productUserHabitsRepository.save(product);
+        }
     }
 }

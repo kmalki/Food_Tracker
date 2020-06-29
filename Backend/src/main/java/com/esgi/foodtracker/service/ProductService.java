@@ -1,10 +1,7 @@
 package com.esgi.foodtracker.service;
 
 import com.esgi.foodtracker.model.*;
-import com.esgi.foodtracker.repository.ProductRepository;
-import com.esgi.foodtracker.repository.ProductUserDailyHabitsRepository;
-import com.esgi.foodtracker.repository.ProductUserHabitsRepository;
-import com.esgi.foodtracker.repository.ProductUserRepository;
+import com.esgi.foodtracker.repository.*;
 import com.google.zxing.*;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.oned.EAN13Reader;
@@ -26,6 +23,9 @@ import java.util.List;
 public class ProductService {
 
     final static Logger logger = LoggerFactory.getLogger(ProductService.class);
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private ProductUserRepository productUserRepository;
@@ -96,19 +96,22 @@ public class ProductService {
 
     public void insertOrUpdateProductUserHabits(ProductDTO product, int quantity){
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserApp user = userRepository.findByUsername(username);
         ProductUserHabitDTO productUserHabit = productUserHabitsRepository.findProductUserHabitDTOByPuk_UseridAndPuk_Code(
                 username,
                 product.getCode());
         if(productUserHabit==null){
             productUserHabit = new ProductUserHabitDTO(
                     new ProductUserKey(
-                            username,
+                            user.getUsername(),
                             product.getCode()
                     ),
                     product.getProduct_name(),
                     product.getCategory(),
                     product.getBrand(),
-                    quantity
+                    quantity,
+                    user.getAge(),
+                    user.getSexe()
             );
         }else {
             productUserHabit.setQuantity(
