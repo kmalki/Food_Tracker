@@ -17,7 +17,9 @@ import {
   EuiCallOut,
   EuiFlexGroup,
   EuiFlexItem,
-  EuiLink
+  EuiLink,
+  EuiFieldNumber,
+  EuiRadioGroup
 } from '@elastic/eui';
 
 // set up cookies
@@ -33,7 +35,10 @@ export default class Register extends Component {
       loginError: null,
       passwordError: null,
       showLoader: false,
-      succesRegister: false
+      succesRegister: false,
+      age: null,
+      ageError: null,
+      radioIdSelected: 'Homme'
     }
   }
 
@@ -46,6 +51,7 @@ export default class Register extends Component {
     this.setState({ error: [] });
     this.setState({ loginError: null });
     this.setState({ passwordError: null });
+    this.setState({ ageError: null });
 
     if (!this.state.login) {
       this.setState({ loginError: 'Login must be filled' })
@@ -73,8 +79,19 @@ export default class Register extends Component {
       return;
     }
 
-    this.setState({ passwordError: null })
+    if (!this.state.age) {
+      this.setState({ ageError: 'Age can\'t be empty' })
+      this.setState({ error: ['Age can\'t be empty'] })
+      return;
+    }
 
+    if (this.state.age < 0 || this.state.age > 120) {
+      this.setState({ ageError: 'Age is incorrect' })
+      this.setState({ error: ['Age is incorrect'] })
+      return;
+    }
+
+    console.log(this.state);
     this.launchRegisterRequest();
   }
 
@@ -83,7 +100,9 @@ export default class Register extends Component {
     /* eslint-disable no-console */
     AuthService.register(
       this.state.login,
-      this.state.password
+      this.state.password,
+      parseInt(this.state.age, 10),
+      this.state.radioIdSelected
     ).then(
       response => {
         this.setState({
@@ -124,6 +143,23 @@ export default class Register extends Component {
       </EuiButton>
     );
 
+    const radios = [
+      {
+        id: 'Homme',
+        label: 'Homme',
+        name:  'Homme'
+      },
+      {
+        id: 'Femme',
+        label: 'Femme',
+        name:  'Femme'
+      }
+    ];
+
+    const onChange = optionId => {
+      this.setState({ radioIdSelected: optionId })
+    };
+
     return (
 
       <EuiPage>
@@ -137,9 +173,9 @@ export default class Register extends Component {
               </EuiPageContentHeaderSection>
             </EuiPageContentHeader>
             <EuiPageContentBody>
-            {this.state.succesRegister &&
+              {this.state.succesRegister &&
                 <Fragment>
-                  <EuiCallOut style={{"width": "400px"}} title="Successfully registered !" color="success" iconType="user">
+                  <EuiCallOut style={{ "width": "400px" }} title="Successfully registered !" color="success" iconType="user">
                     <p>
                       You have been successfully registered, you will be redirected to the login page...
                     </p>
@@ -148,7 +184,7 @@ export default class Register extends Component {
                 </Fragment>
               }
               <Fragment>
-                <EuiForm isInvalid={this.state.error.length > 0 || this.state.loginError != null || this.state.passwordError != null}
+                <EuiForm isInvalid={this.state.error.length > 0 || this.state.loginError != null || this.state.passwordError != null || this.state.ageError != null}
                   error={this.state.error}
                 >
                   <EuiFormRow
@@ -192,6 +228,34 @@ export default class Register extends Component {
                       id="passwordConfirmation"
                       name="passwordConfirmation"
                       onChange={(e) => this.onInputChange(e)}
+                    />
+                  </EuiFormRow>
+
+                  <EuiFormRow
+                    label="Age"
+                    isInvalid={this.state.ageError != null}
+                    error={this.state.ageError}
+                  >
+                    <EuiFieldNumber
+                      placeholder="Age"
+                      id="age"
+                      min={0}
+                      max={100}
+                      name="age"
+                      onChange={(e) => this.onInputChange(e)}
+                      aria-label="Age"
+                    />
+                  </EuiFormRow>
+
+                  <EuiFormRow
+                    label="Gender"
+                  >
+                    <EuiRadioGroup
+                      options={radios}
+                      idSelected={this.state.radioIdSelected}
+                      name='gender'
+                      id='gender'
+                      onChange={id => onChange(id)}
                     />
                   </EuiFormRow>
 

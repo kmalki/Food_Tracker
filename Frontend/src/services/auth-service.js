@@ -26,10 +26,12 @@ class AuthService {
         window.location.href = '/login';
     }
 
-    register(username, password) {
+    register(username, password, age, gender) {
         return axios.post(API_URL + "users/sign-up", {
             username,
-            password
+            password,
+            age,
+            gender
         });
     }
 
