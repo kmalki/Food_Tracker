@@ -87,6 +87,13 @@ export default function Consumed() {
       title: 'Succès',
       color: 'success',
       text: <p>Liste mise à jour avec succès</p>
+    },
+    {
+      id: "9",
+      title: 'Erreur',
+      color: 'danger',
+      iconType: 'help',
+      text: <p>Impossible de consommer plus qu'il n'y en a</p>
     }
   ];
 
@@ -105,6 +112,9 @@ export default function Consumed() {
       case 99:
         setToasts(toasts.concat(toastsList[7]));
         break;
+      case 98:
+        setToasts(toasts.concat(toastsList[9]));
+        break;
       default:
         setToasts(toasts.concat(toastsList[4]));
     }
@@ -120,7 +130,7 @@ export default function Consumed() {
     axios
       .get(API_URL_PRODUCTS + 'getProducts', config)
       .then((response) => {
-        setItems(response.data.map(item => ({ code: item.puk.code, product_name: item.product_name, quantity: 0 })));
+        setItems(response.data.map(item => ({ code: item.puk.code, product_name: item.product_name, current_quantity: item.quantity, quantity: 0 })));
       }, () => {
         handleToastError();
       })
@@ -152,10 +162,16 @@ export default function Consumed() {
   }
 
   const addItem = item => {
-    const elementsIndex = items.findIndex(element => element.code === item.code);
-    let newArray = [...items];
-    newArray[elementsIndex] = { ...newArray[elementsIndex], quantity: newArray[elementsIndex].quantity + 1 };
-    setItems(newArray);
+    if (item.quantity < item.current_quantity) {
+      const elementsIndex = items.findIndex(element => element.code === item.code);
+      let newArray = [...items];
+      newArray[elementsIndex] = { ...newArray[elementsIndex], quantity: newArray[elementsIndex].quantity + 1 };
+      setItems(newArray);
+    }
+    else {
+      handleToastError(98);
+    }
+
   };
 
   const removeItem = item => {
@@ -190,11 +206,15 @@ export default function Consumed() {
   const columns = [
     {
       field: 'product_name',
-      name: 'Produit',
+      name: 'Produit'
+    },
+    {
+      field: 'current_quantity',
+      name: 'Quantité actuelle'
     },
     {
       field: 'quantity',
-      name: 'Quantité',
+      name: 'Quantité consommé'
     },
     {
       actions
