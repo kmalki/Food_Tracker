@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import AuthService from '../services/auth-service';
 import ProfilePopover from './profile_popover.js';
 
@@ -18,7 +18,12 @@ import {
   EuiDualRange,
   EuiFormHelpText,
   EuiLink,
-  EuiSwitch
+  EuiSwitch,
+  EuiHeader,
+  EuiHeaderSectionItem,
+  EuiHeaderLogo,
+  EuiHeaderLinks,
+  EuiHeaderLink
 } from '@elastic/eui';
 
 export default function Recettes() {
@@ -107,75 +112,96 @@ export default function Recettes() {
 
   if (AuthService.getCurrentUser()) {
     return (
-      <EuiPage>
-        <EuiPageBody>
-          <EuiPageContent>
-            <EuiPageContentHeader>
-              <EuiPageContentHeaderSection style={{ "width": "100%" }}>
-                <EuiFlexGroup justifyContent="spaceBetween" style={{ "width": "100%" }}>
-                  <EuiFlexItem grow={false} tyle={{ minWidth: 200 }}>
-                    <EuiTitle size='l'>
-                      <h1>Food Tracker</h1>
+      <Fragment>
+        <EuiHeader>
+          <EuiHeaderSectionItem border="right">
+            <EuiHeaderLogo href="/home">Food Tracker</EuiHeaderLogo>
+          </EuiHeaderSectionItem>
+          <EuiHeaderSectionItem>
+            <EuiHeaderLinks aria-label="App navigation links example">
+              <EuiHeaderLink href="/home">
+                Home
+          </EuiHeaderLink>
+              <EuiHeaderLink href="/paniers">
+                Mes paniers
+          </EuiHeaderLink>
+              <EuiHeaderLink href="/consumed">Mes produits consommés</EuiHeaderLink>
+              <EuiHeaderLink iconType="help" href="#">
+                Help
+      </EuiHeaderLink>
+            </EuiHeaderLinks>
+          </EuiHeaderSectionItem>
+        </EuiHeader>
+        <EuiPage>
+          <EuiPageBody>
+            <EuiPageContent>
+              <EuiPageContentHeader>
+                <EuiPageContentHeaderSection style={{ "width": "100%" }}>
+                  <EuiFlexGroup justifyContent="spaceBetween" style={{ "width": "100%" }}>
+                    <EuiFlexItem grow={false} tyle={{ minWidth: 200 }}>
+                      <EuiTitle size='l'>
+                        <h1>Food Tracker</h1>
+                      </EuiTitle>
+                    </EuiFlexItem>
+                    <EuiFlexItem grow={false}>
+                      <ProfilePopover />
+                    </EuiFlexItem>
+                  </EuiFlexGroup>
+                </EuiPageContentHeaderSection>
+              </EuiPageContentHeader>
+              <EuiPageContentBody>
+                <EuiFlexGroup>
+                  <EuiFlexItem>
+                    <EuiTitle size='m'>
+                      <h3>Recettes</h3>
                     </EuiTitle>
-                  </EuiFlexItem>
-                  <EuiFlexItem grow={false}>
-                    <ProfilePopover />
+                    <EuiSpacer />
+                    <EuiSwitch
+                      label="N'afficher que des recettes faisables avec les aliments disponibles"
+                      checked={checked}
+                      onChange={e => onChangeSwitch(e)}
+                    />
+                    <EuiSpacer />
+                    <EuiAccordion
+                      id="accordion"
+                      buttonContent="Gérer le temps des recettes"
+                      paddingSize="m">
+                      <EuiDualRange
+                        min={0}
+                        max={100}
+                        step={20}
+                        value={value}
+                        onChange={onChange}
+                        showLabels
+                        showTicks
+                        aria-label="An example of EuiDualRange"
+                        showInput={true}
+                      />
+                      <EuiFormHelpText id="levelsHelp">
+                        Temps de préparation nécessaire pour les recettes en minutes.
+                    </EuiFormHelpText>
+                    </EuiAccordion>
+                    <EuiSpacer />
+
+                    <EuiInMemoryTable
+                      items={items}
+                      loading={isLoading}
+                      columns={columns}
+                      search={search}
+                      pagination={true}
+                      sorting={true}
+                    />
                   </EuiFlexItem>
                 </EuiFlexGroup>
-              </EuiPageContentHeaderSection>
-            </EuiPageContentHeader>
-            <EuiPageContentBody>
-              <EuiFlexGroup>
-                <EuiFlexItem>
-                  <EuiTitle size='m'>
-                    <h3>Recettes</h3>
-                  </EuiTitle>
-                  <EuiSpacer />
-                  <EuiSwitch
-                    label="N'afficher que des recettes faisables avec les aliments disponibles"
-                    checked={checked}
-                    onChange={e => onChangeSwitch(e)}
-                  />
-                  <EuiSpacer />
-                  <EuiAccordion
-                    id="accordion"
-                    buttonContent="Gérer le temps des recettes"
-                    paddingSize="m">
-                    <EuiDualRange
-                      min={0}
-                      max={100}
-                      step={20}
-                      value={value}
-                      onChange={onChange}
-                      showLabels
-                      showTicks
-                      aria-label="An example of EuiDualRange"
-                      showInput={true}
-                    />
-                    <EuiFormHelpText id="levelsHelp">
-                      Temps de préparation nécessaire pour les recettes en minutes.
-                    </EuiFormHelpText>
-                  </EuiAccordion>
-                  <EuiSpacer />
-
-                  <EuiInMemoryTable
-                    items={items}
-                    loading={isLoading}
-                    columns={columns}
-                    search={search}
-                    pagination={true}
-                    sorting={true}
-                  />
-                </EuiFlexItem>
-              </EuiFlexGroup>
-              <EuiSpacer />
-              <EuiLink href="/home" >
-                Home
+                <EuiSpacer />
+                <EuiLink href="/home" >
+                  Home
               </EuiLink>{' '}
-            </EuiPageContentBody>
-          </EuiPageContent>
-        </EuiPageBody>
-      </EuiPage>
+              </EuiPageContentBody>
+            </EuiPageContent>
+          </EuiPageBody>
+        </EuiPage>
+      </Fragment>
     );
   }
   else {
