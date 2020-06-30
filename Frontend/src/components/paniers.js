@@ -35,7 +35,12 @@ import {
   EuiFieldNumber,
   EuiGlobalToastList,
   EuiFieldText,
-  EuiLoadingChart
+  EuiLoadingChart,
+  EuiHeader,
+  EuiHeaderSectionItem,
+  EuiHeaderLogo,
+  EuiHeaderLinks,
+  EuiHeaderLink
 } from '@elastic/eui';
 
 export default function Home() {
@@ -586,83 +591,104 @@ export default function Home() {
     }
     else {
       return (
-        <EuiPage>
-          <EuiGlobalToastList
-            toasts={toasts}
-            dismissToast={removeToast}
-            toastLifeTimeMs={6000}
-          />
-          {isModalVisible && modal}
-          {isModalSpeechVisible && modalSpeech}
-          {IsModalManualVisible && modalManually}
-          <EuiPageBody>
-            <EuiPageContent>
-              <EuiPageContentHeader>
-                <EuiPageContentHeaderSection style={{ "width": "100%" }}>
-                  <EuiFlexGroup justifyContent="spaceBetween" style={{ "width": "100%" }}>
-                    <EuiFlexItem grow={false} tyle={{ minWidth: 200 }}>
-                      <EuiTitle size='l'>
-                        <h1>Food Tracker</h1>
-                      </EuiTitle>
-                    </EuiFlexItem>
-                    <EuiFlexItem grow={false}>
-                      <ProfilePopover />
-                    </EuiFlexItem>
-                  </EuiFlexGroup>
-                </EuiPageContentHeaderSection>
-              </EuiPageContentHeader>
-              <EuiPageContentBody>
-                <EuiFlexGroup>
-                  <EuiFlexItem>
-                    <EuiTitle size='m'>
-                      <h3>Aliments</h3>
-                    </EuiTitle>
-                    <EuiBasicTable
-                      items={items}
-                      columns={columns}
-                      hasActions={true}
-                    />
-                    <EuiSpacer />
-                    <EuiTitle style={{ margin: 'auto' }} size='xxs'>
-                      <h4>Ajouter un aliment :</h4>
-                    </EuiTitle>
-                    <EuiSpacer />
-                    <EuiFlexGroup justifyContent="spaceAround">
+        <Fragment>
+          <EuiHeader>
+            <EuiHeaderSectionItem border="right">
+              <EuiHeaderLogo href="/home">Food Tracker</EuiHeaderLogo>
+            </EuiHeaderSectionItem>
+            <EuiHeaderSectionItem>
+              <EuiHeaderLinks aria-label="App navigation links example">
+                <EuiHeaderLink href="/home">
+                  Home
+              </EuiHeaderLink>
+                <EuiHeaderLink href="/recettes">
+                  Mes recettes
+              </EuiHeaderLink>
+                <EuiHeaderLink href="/consumed">Mes produits consommés</EuiHeaderLink>
+                <EuiHeaderLink iconType="help" href="#">
+                  Help
+          </EuiHeaderLink>
+              </EuiHeaderLinks>
+            </EuiHeaderSectionItem>
+          </EuiHeader>
+          <EuiPage>
+            <EuiGlobalToastList
+              toasts={toasts}
+              dismissToast={removeToast}
+              toastLifeTimeMs={6000}
+            />
+            {isModalVisible && modal}
+            {isModalSpeechVisible && modalSpeech}
+            {IsModalManualVisible && modalManually}
+            <EuiPageBody>
+              <EuiPageContent>
+                <EuiPageContentHeader>
+                  <EuiPageContentHeaderSection style={{ "width": "100%" }}>
+                    <EuiFlexGroup justifyContent="spaceBetween" style={{ "width": "100%" }}>
+                      <EuiFlexItem grow={false} tyle={{ minWidth: 200 }}>
+                        <EuiTitle size='l'>
+                          <h1>Mes paniers</h1>
+                        </EuiTitle>
+                      </EuiFlexItem>
                       <EuiFlexItem grow={false}>
-                        <EuiFlexGroup justifyContent="spaceAround">
-                          <EuiFlexItem>
-                            <EuiButton iconType="plusInCircleFilled" onClick={handleFileSelect}>
-                              En scannant
-                            </EuiButton>
-                          </EuiFlexItem>
-                          <EuiFlexItem>
-                            <EuiButton iconType="plusInCircleFilled" onClick={openModalManually}>
-                              En dictant/manuellement
-                            </EuiButton>
-                          </EuiFlexItem>
-                        </EuiFlexGroup>
+                        <ProfilePopover />
                       </EuiFlexItem>
                     </EuiFlexGroup>
-                  </EuiFlexItem>
-                  <EuiFlexItem>
-                    <EuiTitle size='m' style={{ margin: 'auto' }}>
-                      <h2>Ma liste de course</h2>
-                    </EuiTitle>
-                    <EuiText textAlign="center">
-                      <h3>Paniers automatiques</h3>
-                    </EuiText>
-                    <CustomCarousel />
-                    <EuiSpacer />
-                  </EuiFlexItem>
-                </EuiFlexGroup>
-                <EuiSpacer />
-                <EuiLink href="/home" >
-                  Home
+                  </EuiPageContentHeaderSection>
+                </EuiPageContentHeader>
+                <EuiPageContentBody>
+                  <EuiFlexGroup>
+                    <EuiFlexItem>
+                      <EuiTitle size='m'>
+                        <h3>Aliments</h3>
+                      </EuiTitle>
+                      <EuiBasicTable
+                        items={items}
+                        columns={columns}
+                        hasActions={true}
+                      />
+                      <EuiSpacer />
+                      <EuiTitle style={{ margin: 'auto' }} size='xxs'>
+                        <h4>Ajouter un aliment :</h4>
+                      </EuiTitle>
+                      <EuiSpacer />
+                      <EuiFlexGroup justifyContent="spaceAround">
+                        <EuiFlexItem grow={false}>
+                          <EuiFlexGroup justifyContent="spaceAround">
+                            <EuiFlexItem>
+                              <EuiButton iconType="plusInCircleFilled" onClick={handleFileSelect}>
+                                En scannant
+                            </EuiButton>
+                            </EuiFlexItem>
+                            <EuiFlexItem>
+                              <EuiButton iconType="plusInCircleFilled" onClick={openModalManually}>
+                                En dictant/manuellement
+                            </EuiButton>
+                            </EuiFlexItem>
+                          </EuiFlexGroup>
+                        </EuiFlexItem>
+                      </EuiFlexGroup>
+                    </EuiFlexItem>
+                    <EuiFlexItem>
+                      <EuiTitle size='m' style={{ margin: 'auto' }}>
+                        <h2>Ma liste de course</h2>
+                      </EuiTitle>
+                      <EuiText textAlign="center">
+                        <h3>Paniers automatiques</h3>
+                      </EuiText>
+                      <CustomCarousel />
+                      <EuiSpacer />
+                    </EuiFlexItem>
+                  </EuiFlexGroup>
+                  <EuiSpacer />
+                  <EuiLink href="/home" >
+                    Home
               </EuiLink>{' '}
-              </EuiPageContentBody>
-            </EuiPageContent>
-          </EuiPageBody>
-        </EuiPage>
+                </EuiPageContentBody>
+              </EuiPageContent>
+            </EuiPageBody>
+          </EuiPage>
+        </Fragment>
       );
     }
   }
