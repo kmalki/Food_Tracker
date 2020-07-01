@@ -1,6 +1,9 @@
 import React, { useState, Fragment } from 'react';
 import AuthService from '../services/auth-service';
 import ProfilePopover from './profile_popover.js';
+import CustomCarouselFavorites from './customCarouselFavorites.js';
+import CustomCarouselHistory from './customCarouselHistory.js';
+import CustomCarouselTests from './customCarouselTests.js';
 
 import {
   EuiPage,
@@ -23,7 +26,8 @@ import {
   EuiHeaderSectionItem,
   EuiHeaderLogo,
   EuiHeaderLinks,
-  EuiHeaderLink
+  EuiHeaderLink,
+  EuiText
 } from '@elastic/eui';
 
 export default function Recettes() {
@@ -140,7 +144,7 @@ export default function Recettes() {
                   <EuiFlexGroup justifyContent="spaceBetween" style={{ "width": "100%" }}>
                     <EuiFlexItem grow={false} tyle={{ minWidth: 200 }}>
                       <EuiTitle size='l'>
-                        <h1>Food Tracker</h1>
+                        <h1>Recettes</h1>
                       </EuiTitle>
                     </EuiFlexItem>
                     <EuiFlexItem grow={false}>
@@ -152,9 +156,6 @@ export default function Recettes() {
               <EuiPageContentBody>
                 <EuiFlexGroup>
                   <EuiFlexItem>
-                    <EuiTitle size='m'>
-                      <h3>Recettes</h3>
-                    </EuiTitle>
                     <EuiSpacer />
                     <EuiSwitch
                       label="N'afficher que des recettes faisables avec les aliments disponibles"
@@ -191,6 +192,23 @@ export default function Recettes() {
                       pagination={true}
                       sorting={true}
                     />
+                  </EuiFlexItem>
+                  <EuiFlexItem>
+                    <EuiText textAlign="center">
+                      <h3>Favoris</h3>
+                    </EuiText>
+                    <CustomCarouselFavorites />
+                    <EuiSpacer />
+                    <EuiText textAlign="center">
+                      <h3>Historique</h3>
+                    </EuiText>
+                    <CustomCarouselHistory />
+                    <EuiSpacer />
+                    <EuiText textAlign="center">
+                      <h3> A tester</h3>
+                    </EuiText>
+                    <CustomCarouselTests />
+                    <EuiSpacer />
                   </EuiFlexItem>
                 </EuiFlexGroup>
                 <EuiSpacer />

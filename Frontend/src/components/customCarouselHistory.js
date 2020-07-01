@@ -40,31 +40,49 @@ export default class CustomCarousel extends React.Component {
         >
           <div style={sss}>
             <img
+              style={{
+                height: 200,
+                width: 200
+              }}
               alt=''
-              src='https://picsum.photos/200'
+              src='https://img.cuisineaz.com/240x192/2015-03-18/i21221-chili-con-carne-a-la-viande-hachee-et-aux-legumes.jpg'
             />
-            <div style={{textAlign:'center'}}>Test</div>
+            <div style={{ textAlign: 'center' }}>Chili con carne à la viande hachée et aux légumes
+</div>
           </div>
           <div style={sss}>
             <img
+              style={{
+                height: 200,
+                width: 200
+              }}
               alt=''
-              src='https://picsum.photos/200'
+              src='https://img.cuisineaz.com/240x192/2017-02-06/i120624-croque-monsieur-omelette.jpeg'
             />
-            <div style={{textAlign:'center'}}>Test</div>
+            <div style={{ textAlign: 'center' }}>Croque monsieur omelette</div>
           </div>
           <div style={sss}>
             <img
+              style={{
+                height: 200,
+                width: 200
+              }}
               alt=''
-              src='https://picsum.photos/200'
+              src='https://img.cuisineaz.com/240x192/2018-03-19/i137459-endives-au-jambon-blanc-et-a-la-bechamel.jpeg'
             />
-            <div style={{textAlign:'center'}}>Test</div>
+            <div style={{ textAlign: 'center' }}>Endives au jambon blanc et à la béchamel
+            </div>
           </div>
           <div style={sss}>
             <img
+              style={{
+                height: 200,
+                width: 200
+              }}
               alt=''
-              src='https://picsum.photos/200'
+              src='https://img.cuisineaz.com/240x192/2017-06-22/i129384-saumon-poele-aux-lentilles-vertes-du-puy.jpeg'
             />
-            <div>Test</div>
+            <div>Saumon poêlé aux lentilles vertes du Puy</div>
           </div>
         </Carousel>
       </div>

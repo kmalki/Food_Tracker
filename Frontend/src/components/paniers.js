@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import '../App.css';
-import CustomCarousel from './customCarousel.js';
 import AuthService from '../services/auth-service';
 import axios from "axios";
 import ProfilePopover from './profile_popover.js';
@@ -676,7 +675,6 @@ export default function Home() {
                       <EuiText textAlign="center">
                         <h3>Paniers automatiques</h3>
                       </EuiText>
-                      <CustomCarousel />
                       <EuiSpacer />
                     </EuiFlexItem>
                   </EuiFlexGroup>

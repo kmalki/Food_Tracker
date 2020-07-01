@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import '../App.css';
-import CustomCarousel from './customCarousel.js';
+
 import AuthService from '../services/auth-service';
 import axios from "axios";
 import ProfilePopover from './profile_popover.js';
@@ -17,8 +17,6 @@ import {
   EuiTitle,
   EuiFlexGroup,
   EuiFlexItem,
-  EuiSpacer,
-  EuiText,
   EuiBasicTable,
   EuiHeader,
   EuiHeaderSectionItem,
@@ -135,7 +133,6 @@ export default function Home() {
                     <EuiTitle size='m' style={{ margin: 'auto' }}>
                       <h2>Graphes</h2>
                     </EuiTitle>
-
                     <EuiFlexGroup justifyContent="spaceAround">
                       <EuiFlexItem grow={false}>
                         <EuiDatePickerRange
@@ -199,24 +196,6 @@ export default function Home() {
                         </div>
                       </EuiFlexItem>
                     </EuiFlexGroup>
-                    <EuiTitle size='m' style={{ margin: 'auto' }}>
-                      <h2>Recettes</h2>
-                    </EuiTitle>
-                    <EuiText textAlign="center">
-                      <h3>Favoris</h3>
-                    </EuiText>
-                    <CustomCarousel />
-                    <EuiSpacer />
-                    <EuiText textAlign="center">
-                      <h3>Historique</h3>
-                    </EuiText>
-                    <CustomCarousel />
-                    <EuiSpacer />
-                    <EuiText textAlign="center">
-                      <h3> A tester</h3>
-                    </EuiText>
-                    <CustomCarousel />
-                    <EuiSpacer />
                   </EuiFlexItem>
                 </EuiFlexGroup>
               </EuiPageContentBody>
