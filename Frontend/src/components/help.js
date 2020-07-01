@@ -60,7 +60,7 @@ export default function Help() {
                 </EuiPageContentHeaderSection>
               </EuiPageContentHeader>
               <EuiPageContentBody>Cette application permet de gérer ses vivres à la perfection en suivant le stock de vos aliments. Elle permet également
-              de suivre votre consommation et d'en tirer des statistiques dans le but de vous aider rant sur un plan financier que nutritionnel.
+              de suivre votre consommation et d'en tirer des statistiques dans le but de vous aider tant sur un plan financier que nutritionnel.
               </EuiPageContentBody>
             </EuiPageContent>
           </EuiPageBody>

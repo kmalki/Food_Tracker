@@ -108,7 +108,7 @@ export default function Home() {
                 <EuiPageContentHeaderSection style={{ "width": "100%" }}>
                   <EuiFlexGroup justifyContent="spaceBetween" style={{ "width": "100%" }}>
                     <EuiFlexItem grow={false} style={{ minWidth: 200 }}>
-                      <EuiTitle size='m'>
+                      <EuiTitle size='l'>
                         <h2>Home</h2>
                       </EuiTitle>
                     </EuiFlexItem>

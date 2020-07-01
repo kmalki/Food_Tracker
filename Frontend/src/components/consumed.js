@@ -241,7 +241,7 @@ export default function Consumed() {
               <EuiHeaderLink href="/paniers">
                 Mes paniers
         </EuiHeaderLink>
-              <EuiHeaderLink href="/consumed">Mes produits consommés</EuiHeaderLink>
+              <EuiHeaderLink href="/recettes">Mes recettes</EuiHeaderLink>
               <EuiHeaderLink iconType="help" href="#">
                 Help
         </EuiHeaderLink>
@@ -261,7 +261,7 @@ export default function Consumed() {
                   <EuiFlexGroup justifyContent="spaceBetween" style={{ "width": "100%" }}>
                     <EuiFlexItem grow={false} tyle={{ minWidth: 200 }}>
                       <EuiTitle size='l'>
-                        <h1>Food Tracker</h1>
+                        <h1>Consommation</h1>
                       </EuiTitle>
                     </EuiFlexItem>
                     <EuiFlexItem grow={false}>
