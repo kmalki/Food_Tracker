@@ -39,7 +39,8 @@ import {
   EuiHeaderSectionItem,
   EuiHeaderLogo,
   EuiHeaderLinks,
-  EuiHeaderLink
+  EuiHeaderLink,
+  EuiPanel
 } from '@elastic/eui';
 
 export default function Home() {
@@ -168,6 +169,8 @@ export default function Home() {
       subscriptionKey: 'c42e15d685404d84a83cd9290604ed93'
     }
   });
+
+  let brands = ["TOTO", "TATA"];
 
   const API_URL_PRODUCTS = 'http://localhost:8080/products/';
   useEffect(() => {
@@ -672,10 +675,21 @@ export default function Home() {
                       <EuiTitle size='m' style={{ margin: 'auto' }}>
                         <h2>Ma liste de course</h2>
                       </EuiTitle>
-                      <EuiText textAlign="center">
-                        <h3>Paniers automatiques</h3>
-                      </EuiText>
                       <EuiSpacer />
+                      <EuiFlexGroup direction="column">
+                        <div>
+                          {brands.map((brand) => {
+                            return <Fragment>
+                              <EuiFlexItem style={{ margin: 'auto' }} grow={false}>
+                                <EuiPanel paddingSize="m">
+                                  <EuiText textAlign="center">{brand}</EuiText>
+                                </EuiPanel>
+                              </EuiFlexItem>
+                              <EuiSpacer size="s"/>
+                            </Fragment>
+                          })}
+                        </div>
+                      </EuiFlexGroup>
                     </EuiFlexItem>
                   </EuiFlexGroup>
                   <EuiSpacer />
