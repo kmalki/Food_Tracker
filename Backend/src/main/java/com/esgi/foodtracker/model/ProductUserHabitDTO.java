@@ -37,7 +37,7 @@ public class ProductUserHabitDTO {
                                int age, String sexe) {
         this.puk = puk;
         this.product_name = product_name;
-        this.category = category;
+        this.category = category.replace(',',';');
         this.quantity = quantity;
         this.brand = brand;
         this.age = age;

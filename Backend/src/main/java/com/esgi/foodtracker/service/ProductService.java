@@ -176,13 +176,14 @@ public class ProductService {
         }
     }
 
-    public NutritionGraphDTO getUserNutrition(DateDTO date){
+    public NutritionGraphDTO getUserNutrition(DateDTO dateGreater, DateDTO dateLess){
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<ProductUserDailyHabitDTO> productUserDailyHabitDTOS =
-                productUserDailyHabitsRepository.findProductUserDailyHabitDTOSByPuk_UseridAndDateGreaterThanEqual(
-                        "jojo",
-                        LocalDate.fromYearMonthDay(date.getYear(),date.getMonth(),date.getDay())
-                );
+                productUserDailyHabitsRepository.findProductUserDailyHabitDTOSByPuk_UseridAndDateLessThanEqualAndDateGreaterThanEqual(
+                        username,
+                        LocalDate.fromYearMonthDay(dateLess.getYear(),dateLess.getMonth(),dateLess.getDay()),
+                        LocalDate.fromYearMonthDay(dateGreater.getYear(),dateGreater.getMonth(),dateGreater.getDay())
+                        );
 
         List<LocalDate> dates = productUserDailyHabitDTOS.stream()
                 .map(ProductUserDailyHabitDTO::getDate)

@@ -4,9 +4,6 @@ import com.esgi.foodtracker.model.*;
 import com.esgi.foodtracker.repository.ProductRepository;
 import com.esgi.foodtracker.repository.ProductUserHabitsRepository;
 import com.esgi.foodtracker.service.ProductService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.rozidan.springboot.logger.Loggable;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.StatefulBeanToCsv;
@@ -116,7 +113,7 @@ public class ProductController {
         StatefulBeanToCsv<ProductUserHabitDTO> writer =
                 new StatefulBeanToCsvBuilder<ProductUserHabitDTO>(response.getWriter())
                     .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
-                    .withSeparator(';')
+                    .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
                     .withOrderedResults(false)
                     .build();
 
@@ -129,7 +126,7 @@ public class ProductController {
 
     @Loggable
     @PostMapping("/getNutrition")
-    public ResponseEntity<NutritionGraphDTO> getNutrition(@RequestBody DateDTO date){
-        return ResponseEntity.status(HttpStatus.OK).body(productService.getUserNutrition(date));
+    public ResponseEntity<NutritionGraphDTO> getNutrition(@RequestBody BigDateDTO date){
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getUserNutrition(date.getGreater(), date.getLess()));
     }
 }

@@ -15,6 +15,7 @@ public interface ProductUserDailyHabitsRepository extends CassandraRepository<Pr
     ProductUserDailyHabitDTO findProductUserHabitDTOByPuk_UseridAndPuk_Code(String username, String code);
 
     @AllowFiltering
-    List<ProductUserDailyHabitDTO> findProductUserDailyHabitDTOSByPuk_UseridAndDateGreaterThanEqual(String username, LocalDate date);
+    List<ProductUserDailyHabitDTO> findProductUserDailyHabitDTOSByPuk_UseridAndDateLessThanEqualAndDateGreaterThanEqual
+            (String username, LocalDate dateLess, LocalDate dateGreater);
 
 }

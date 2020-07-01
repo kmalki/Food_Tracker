@@ -29,7 +29,7 @@ public class ProductUserDailyHabitDTO {
                           String category, int quantity) {
         this.puk = puk ;
         this.product_name = product_name;
-        this.category = category;
+        this.category = category.replace(',',';');
         this.quantity = quantity;
         this.date = LocalDate.fromMillisSinceEpoch(new Date().getTime());
     }
