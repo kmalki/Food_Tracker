@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-//                .antMatchers("/**").permitAll();
+                .antMatchers("/**").permitAll();
     }
 
     @Override

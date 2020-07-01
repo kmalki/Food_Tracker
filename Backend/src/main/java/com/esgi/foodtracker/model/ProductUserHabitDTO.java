@@ -39,7 +39,7 @@ public class ProductUserHabitDTO {
         this.product_name = product_name;
         this.category = category.replace(',',';');
         this.quantity = quantity;
-        this.brand = brand;
+        this.brand = brand.replace(',',';');
         this.age = age;
         this.sexe = sexe;
     }
