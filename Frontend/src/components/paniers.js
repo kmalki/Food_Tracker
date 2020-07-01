@@ -680,7 +680,7 @@ export default function Home() {
                         <div>
                           {brands.map((brand) => {
                             return <Fragment>
-                              <EuiFlexItem style={{ margin: 'auto' }} grow={false}>
+                              <EuiFlexItem style={{ margin: 'auto', maxWidth: 344 }} grow={false}>
                                 <EuiPanel paddingSize="m">
                                   <EuiText textAlign="center">{brand}</EuiText>
                                 </EuiPanel>
