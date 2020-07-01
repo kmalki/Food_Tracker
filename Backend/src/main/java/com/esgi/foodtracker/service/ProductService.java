@@ -1,7 +1,10 @@
 package com.esgi.foodtracker.service;
 
+import com.datastax.driver.core.LocalDate;
 import com.esgi.foodtracker.model.*;
 import com.esgi.foodtracker.repository.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.*;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.oned.EAN13Reader;
@@ -13,10 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Hashtable;
-import java.util.List;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -168,5 +174,67 @@ public class ProductService {
                     product.getQuantity()
             ));
         }
+    }
+
+    public NutritionGraphDTO getUserNutrition(DateDTO date){
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<ProductUserDailyHabitDTO> productUserDailyHabitDTOS =
+                productUserDailyHabitsRepository.findProductUserDailyHabitDTOSByPuk_UseridAndDateGreaterThanEqual(
+                        "jojo",
+                        LocalDate.fromYearMonthDay(date.getYear(),date.getMonth(),date.getDay())
+                );
+
+        List<LocalDate> dates = productUserDailyHabitDTOS.stream()
+                .map(ProductUserDailyHabitDTO::getDate)
+                .distinct()
+                .collect(Collectors.toList());
+
+        List<Integer> proteines = new ArrayList<>();
+        List<Integer> lipides = new ArrayList<>();
+        List<Integer> glucides = new ArrayList<>();
+        List<Integer> calciums = new ArrayList<>();
+        List<Integer> calories = new ArrayList<>();
+
+        dates.forEach(d -> {
+            proteines.add(productUserDailyHabitDTOS.stream()
+                    .filter(e -> e.getDate().equals(d))
+                    .map(e -> getProductNutrition(e.getPuk().getCode()))
+                    .map(NutritionDTO::getProteine).reduce(0, Integer::sum));
+
+            lipides.add(productUserDailyHabitDTOS.stream()
+                    .filter(e -> e.getDate().equals(d))
+                    .map(e -> getProductNutrition(e.getPuk().getCode()))
+                    .map(NutritionDTO::getLipide).reduce(0, Integer::sum));
+
+            glucides.add(productUserDailyHabitDTOS.stream()
+                    .filter(e -> e.getDate().equals(d))
+                    .map(e -> getProductNutrition(e.getPuk().getCode()))
+                    .map(NutritionDTO::getGlucide).reduce(0, Integer::sum));
+
+            calciums.add(productUserDailyHabitDTOS.stream()
+                    .filter(e -> e.getDate().equals(d))
+                    .map(e -> getProductNutrition(e.getPuk().getCode()))
+                    .map(NutritionDTO::getCalcium).reduce(0, Integer::sum));
+
+            calories.add(productUserDailyHabitDTOS.stream()
+                    .filter(e -> e.getDate().equals(d))
+                    .map(e -> getProductNutrition(e.getPuk().getCode()))
+                    .map(NutritionDTO::getCalories).reduce(0, Integer::sum));
+        });
+
+        return new NutritionGraphDTO(proteines, lipides, glucides, calciums, calories, dates);
+    }
+
+    public NutritionDTO getProductNutrition(String code){
+        String url = String.format("https://world.openfoodfacts.org/api/v0/product/%s.json", code);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode;
+        try {
+            jsonNode = objectMapper.readTree(new URL(url)).get("product").get("nutriments");
+            return objectMapper.treeToValue(jsonNode, NutritionDTO.class);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+        return null;
     }
 }

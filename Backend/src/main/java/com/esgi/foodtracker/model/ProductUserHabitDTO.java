@@ -1,5 +1,6 @@
 package com.esgi.foodtracker.model;
 
+import com.opencsv.bean.CsvBindByName;
 import org.springframework.data.cassandra.core.mapping.*;
 
 @Table("product_user_habit")
@@ -9,16 +10,22 @@ public class ProductUserHabitDTO {
     @PrimaryKey
     private ProductUserKey puk;
     @Column
+    @CsvBindByName(column = "Product Name")
     private String product_name;
     @Column
+    @CsvBindByName(column = "Categories")
     private String category;
     @Column
+    @CsvBindByName(column = "Quantity")
     private int quantity;
     @Column
+    @CsvBindByName(column = "Brand")
     private String brand;
     @Column
+    @CsvBindByName(column = "Consumer Age")
     private int age;
     @Column
+    @CsvBindByName(column = "Consumer Sexe")
     private String sexe;
 
     public ProductUserHabitDTO() {
