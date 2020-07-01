@@ -13,6 +13,8 @@ import Register from './components/register.js';
 import Login from './components/login.js';
 import Profile from './components/profile.js'
 import Consumed from './components/consumed.js'
+import Help from './components/help.js'
+ 
 function App() {
 
   return (
@@ -35,6 +37,9 @@ function App() {
         </Route>
         <Route path="/consumed">
           <Consumed />
+        </Route>
+        <Route path="/help">
+          <Help />
         </Route>
         <Route path="/">
           <Register />

@@ -130,7 +130,7 @@ export default function Recettes() {
                 Mes paniers
           </EuiHeaderLink>
               <EuiHeaderLink href="/consumed">Mes produits consommés</EuiHeaderLink>
-              <EuiHeaderLink iconType="help" href="#">
+              <EuiHeaderLink iconType="help" href="/help">
                 Help
       </EuiHeaderLink>
             </EuiHeaderLinks>

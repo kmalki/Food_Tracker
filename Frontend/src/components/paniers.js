@@ -607,7 +607,7 @@ export default function Home() {
                   Mes recettes
               </EuiHeaderLink>
                 <EuiHeaderLink href="/consumed">Mes produits consommés</EuiHeaderLink>
-                <EuiHeaderLink iconType="help" href="#">
+                <EuiHeaderLink iconType="help" href="/help">
                   Help
           </EuiHeaderLink>
               </EuiHeaderLinks>

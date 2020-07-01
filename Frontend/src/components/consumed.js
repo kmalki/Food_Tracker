@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import '../App.css';
 import AuthService from '../services/auth-service';
 import axios from "axios";
@@ -18,7 +18,12 @@ import {
   EuiBasicTable,
   EuiLink,
   EuiGlobalToastList,
-  EuiButton
+  EuiButton,
+  EuiHeader,
+  EuiHeaderSectionItem,
+  EuiHeaderLogo,
+  EuiHeaderLinks,
+  EuiHeaderLink,
 } from '@elastic/eui';
 
 export default function Consumed() {
@@ -139,26 +144,26 @@ export default function Consumed() {
   }, [])
 
   function updateProducts() {
-    
-    axios.post(API_URL_PRODUCTS + 'updateList', 
-    items.map(item => ({ code: item.code, quantity: item.quantity })), config)
-    .then((response) => {
-      setToasts(toasts.concat(toastsList[8]));
-      setTimeout(() => {
-        window.location.href = '/home';
-      }, 2000);
-    }, (error) => {
-      console.log(error);
-      if (error.response) {
-        if (error.response.status === 404) {
-          setToasts(toasts.concat(toastsList[3]));
+
+    axios.post(API_URL_PRODUCTS + 'updateList',
+      items.map(item => ({ code: item.code, quantity: item.quantity })), config)
+      .then((response) => {
+        setToasts(toasts.concat(toastsList[8]));
+        setTimeout(() => {
+          window.location.href = '/home';
+        }, 2000);
+      }, (error) => {
+        console.log(error);
+        if (error.response) {
+          if (error.response.status === 404) {
+            setToasts(toasts.concat(toastsList[3]));
+          }
         }
-      }
-      else {
-        setToasts(toasts.concat(toastsList[6]));
-      }
-    });
-    
+        else {
+          setToasts(toasts.concat(toastsList[6]));
+        }
+      });
+
   }
 
   const addItem = item => {
@@ -223,53 +228,74 @@ export default function Consumed() {
 
   if (AuthService.getCurrentUser()) {
     return (
-      <EuiPage>
-        <EuiGlobalToastList
-          toasts={toasts}
-          dismissToast={removeToast}
-          toastLifeTimeMs={6000}
-        />
-        <EuiPageBody>
-          <EuiPageContent>
-            <EuiPageContentHeader>
-              <EuiPageContentHeaderSection style={{ "width": "100%" }}>
-                <EuiFlexGroup justifyContent="spaceBetween" style={{ "width": "100%" }}>
-                  <EuiFlexItem grow={false} tyle={{ minWidth: 200 }}>
-                    <EuiTitle size='l'>
-                      <h1>Food Tracker</h1>
+      <Fragment>
+        <EuiHeader>
+          <EuiHeaderSectionItem border="right">
+            <EuiHeaderLogo href="/home">Food Tracker</EuiHeaderLogo>
+          </EuiHeaderSectionItem>
+          <EuiHeaderSectionItem>
+            <EuiHeaderLinks aria-label="App navigation links example">
+              <EuiHeaderLink href="/home">
+                Home
+        </EuiHeaderLink>
+              <EuiHeaderLink href="/paniers">
+                Mes paniers
+        </EuiHeaderLink>
+              <EuiHeaderLink href="/consumed">Mes produits consommés</EuiHeaderLink>
+              <EuiHeaderLink iconType="help" href="#">
+                Help
+        </EuiHeaderLink>
+            </EuiHeaderLinks>
+          </EuiHeaderSectionItem>
+        </EuiHeader>
+        <EuiPage>
+          <EuiGlobalToastList
+            toasts={toasts}
+            dismissToast={removeToast}
+            toastLifeTimeMs={6000}
+          />
+          <EuiPageBody>
+            <EuiPageContent>
+              <EuiPageContentHeader>
+                <EuiPageContentHeaderSection style={{ "width": "100%" }}>
+                  <EuiFlexGroup justifyContent="spaceBetween" style={{ "width": "100%" }}>
+                    <EuiFlexItem grow={false} tyle={{ minWidth: 200 }}>
+                      <EuiTitle size='l'>
+                        <h1>Food Tracker</h1>
+                      </EuiTitle>
+                    </EuiFlexItem>
+                    <EuiFlexItem grow={false}>
+                      <ProfilePopover />
+                    </EuiFlexItem>
+                  </EuiFlexGroup>
+                </EuiPageContentHeaderSection>
+              </EuiPageContentHeader>
+              <EuiPageContentBody>
+                <EuiFlexGroup>
+                  <EuiFlexItem>
+                    <EuiTitle size='m'>
+                      <h3>Aliments consomés</h3>
                     </EuiTitle>
-                  </EuiFlexItem>
-                  <EuiFlexItem grow={false}>
-                    <ProfilePopover />
+                    <EuiBasicTable
+                      items={items}
+                      columns={columns}
+                      hasActions={true}
+                    />
                   </EuiFlexItem>
                 </EuiFlexGroup>
-              </EuiPageContentHeaderSection>
-            </EuiPageContentHeader>
-            <EuiPageContentBody>
-              <EuiFlexGroup>
-                <EuiFlexItem>
-                  <EuiTitle size='m'>
-                    <h3>Aliments consomés</h3>
-                  </EuiTitle>
-                  <EuiBasicTable
-                    items={items}
-                    columns={columns}
-                    hasActions={true}
-                  />
-                </EuiFlexItem>
-              </EuiFlexGroup>
-              <EuiSpacer />
-              <EuiButton onClick={updateProducts} fill>
-                Mettre à jour
+                <EuiSpacer />
+                <EuiButton onClick={updateProducts} fill>
+                  Mettre à jour
             </EuiButton>
-              <EuiSpacer />
-              <EuiLink href="/home" >
-                Home
+                <EuiSpacer />
+                <EuiLink href="/home" >
+                  Home
               </EuiLink>{' '}
-            </EuiPageContentBody>
-          </EuiPageContent>
-        </EuiPageBody>
-      </EuiPage>
+              </EuiPageContentBody>
+            </EuiPageContent>
+          </EuiPageBody>
+        </EuiPage>
+      </Fragment>
     );
   }
   else {
