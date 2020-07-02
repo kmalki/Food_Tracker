@@ -195,6 +195,7 @@ public class ProductService {
         List<Integer> glucides = new ArrayList<>();
         List<Integer> calciums = new ArrayList<>();
         List<Integer> calories = new ArrayList<>();
+        List<Integer> sels = new ArrayList<>();
 
         dates.forEach(d -> {
             proteines.add(productUserDailyHabitDTOS.stream()
@@ -215,15 +216,20 @@ public class ProductService {
             calciums.add(productUserDailyHabitDTOS.stream()
                     .filter(e -> e.getDate().equals(d))
                     .map(e -> getProductNutrition(e.getPuk().getCode()))
-                    .map(NutritionDTO::getCalcium).reduce(0, Integer::sum));
+                    .map(NutritionDTO::getCalcium).reduce(0, Integer::sum)/1000);
 
             calories.add(productUserDailyHabitDTOS.stream()
                     .filter(e -> e.getDate().equals(d))
                     .map(e -> getProductNutrition(e.getPuk().getCode()))
                     .map(NutritionDTO::getCalories).reduce(0, Integer::sum));
+
+            sels.add(productUserDailyHabitDTOS.stream()
+                    .filter(e -> e.getDate().equals(d))
+                    .map(e -> getProductNutrition(e.getPuk().getCode()))
+                    .map(NutritionDTO::getSel).reduce(0, Integer::sum));
         });
 
-        return new NutritionGraphDTO(proteines, lipides, glucides, calciums, calories, dates);
+        return new NutritionGraphDTO(proteines, lipides, glucides, calciums, calories, sels, dates);
     }
 
     public NutritionDTO getProductNutrition(String code){

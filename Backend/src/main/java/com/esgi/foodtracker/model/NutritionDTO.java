@@ -16,16 +16,19 @@ public class NutritionDTO {
     private int calcium;
     @JsonProperty("energy-kcal")
     private int calories;
+    @JsonProperty("salt")
+    private int sel;
 
     public NutritionDTO() {
     }
 
-    public NutritionDTO(int proteine, int lipide, int glucide, int calcium, int calories) {
+    public NutritionDTO(int proteine, int lipide, int glucide, int calcium, int calories, int sel) {
         this.proteine = proteine;
         this.lipide = lipide;
         this.glucide = glucide;
         this.calcium = calcium;
         this.calories = calories;
+        this.sel = sel;
     }
 
     public int getProteine() {
@@ -68,6 +71,14 @@ public class NutritionDTO {
         this.calories = calories;
     }
 
+    public int getSel() {
+        return sel;
+    }
+
+    public void setSel(int sel) {
+        this.sel = sel;
+    }
+
     @Override
     public String toString() {
         return "NutritionDTO{" +
@@ -76,6 +87,7 @@ public class NutritionDTO {
                 ", glucide=" + glucide +
                 ", calcium=" + calcium +
                 ", calories=" + calories +
+                ", sel=" + sel +
                 '}';
     }
 }
