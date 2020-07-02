@@ -500,7 +500,7 @@ export default function Home() {
                                   borderWidth: 2,
                                   label: {
                                     enabled: true,
-                                    content: 'Limite journalière calcium (mg))'
+                                    content: 'Limite journalière calcium (mg)'
                                   }
                                 }]
                               }
