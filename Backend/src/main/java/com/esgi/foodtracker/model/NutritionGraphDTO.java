@@ -12,16 +12,18 @@ public class NutritionGraphDTO {
     private List<Integer> glucide;
     private List<Integer> calcium;
     private List<Integer> calories;
+    private List<Integer> sel;
     private List<LocalDate> dates;
 
     public NutritionGraphDTO(List<Integer> proteine, List<Integer> lipide, List<Integer> glucide, List<Integer> calcium,
-                             List<Integer> calories, List<LocalDate> dates) {
+                             List<Integer> calories, List<Integer> sel, List<LocalDate> dates) {
         this.proteine = proteine;
         this.lipide = lipide;
         this.glucide = glucide;
         this.calcium = calcium;
         this.calories = calories;
         this.dates = dates;
+        this.sel = sel;
     }
 
     public List<Integer> getProteine() {
@@ -72,6 +74,14 @@ public class NutritionGraphDTO {
         this.dates = dates;
     }
 
+    public List<Integer> getSel() {
+        return sel;
+    }
+
+    public void setSel(List<Integer> sel) {
+        this.sel = sel;
+    }
+
     @Override
     public String toString() {
         return "NutritionGraphDTO{" +
@@ -80,6 +90,7 @@ public class NutritionGraphDTO {
                 ", glucide=" + glucide +
                 ", calcium=" + calcium +
                 ", calories=" + calories +
+                ", sel=" + sel +
                 ", dates=" + dates +
                 '}';
     }
