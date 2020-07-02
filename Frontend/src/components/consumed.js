@@ -146,7 +146,7 @@ export default function Consumed() {
   function updateProducts() {
 
     axios.post(API_URL_PRODUCTS + 'updateList',
-      items.map(item => ({ code: item.code, quantity: item.quantity })), config)
+      items.map(item => ({ code: item.code, quantity: item.quantity })).filter(item => item.quantity > 0), config)
       .then((response) => {
         setToasts(toasts.concat(toastsList[8]));
         setTimeout(() => {

@@ -25,7 +25,9 @@ import {
   EuiDatePicker,
   EuiDatePickerRange,
   EuiSpacer,
-  EuiGlobalToastList
+  EuiGlobalToastList,
+  EuiProgress,
+  EuiPortal
 } from '@elastic/eui';
 
 export default function Home() {
@@ -40,6 +42,7 @@ export default function Home() {
   const [glucideArray, setglucideArray] = useState([]);
   const [lipideArray, setlipideArray] = useState([]);
   const [proteineArray, setproteineArray] = useState([]);
+  const [showProgress, setShowProgress] = useState(true);
 
   const toastsList = [
     {
@@ -50,6 +53,12 @@ export default function Home() {
       text: <p>Une erreur est survenue</p>
     }
   ];
+
+  const toggleProgress = () => {
+
+    setShowProgress(!showProgress);
+
+  };
 
   useEffect(() => {
 
@@ -77,10 +86,12 @@ export default function Home() {
         setglucideArray(response.data.glucide);
         setlipideArray(response.data.lipide);
         setproteineArray(response.data.proteine);
+        toggleProgress();
       }, (error) => {
         setdates([startDate, endDate]);
         console.log(error);
         setToasts(toasts.concat(toastsList[0]));
+        toggleProgress();
       });
   }
 
@@ -161,6 +172,20 @@ export default function Home() {
       name: 'Quantité',
     }
   ];
+
+  let progress = null;
+
+  if (showProgress) {
+    progress = (
+      <div>
+        <div style={{ position: 'absolute', zIndex: '5' }}>
+          <EuiPortal>
+            <EuiProgress size="xs" color="accent" position="fixed" />
+          </EuiPortal>
+        </div>
+      </div>
+    );
+  }
 
   if (AuthService.getCurrentUser()) {
     return (
@@ -291,6 +316,7 @@ export default function Home() {
             </EuiPageContent>
           </EuiPageBody>
         </EuiPage>
+        {progress}
       </Fragment>
     );
   }
