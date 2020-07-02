@@ -5,22 +5,13 @@ import com.esgi.foodtracker.repository.ProductRepository;
 import com.esgi.foodtracker.repository.ProductUserHabitsRepository;
 import com.esgi.foodtracker.service.ProductService;
 import com.github.rozidan.springboot.logger.Loggable;
-import com.opencsv.CSVWriter;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -34,9 +25,6 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
-
-    @Autowired
-    private ProductUserHabitsRepository productUserHabitsRepository;
 
     @Loggable
     @GetMapping("/getProducts")
@@ -96,32 +84,6 @@ public class ProductController {
         productRepository.save(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(String.format("Product EAN %s created",
                 product.getCode()));
-    }
-
-    @Loggable
-    @GetMapping("/export")
-    public void exportData(HttpServletResponse response){
-        //set file name and content type
-        String filename = "data.csv";
-
-        response.setContentType("text/csv");
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + filename + "\"");
-
-        try {
-        //create a csv writer
-        StatefulBeanToCsv<ProductUserHabitDTO> writer =
-                new StatefulBeanToCsvBuilder<ProductUserHabitDTO>(response.getWriter())
-                    .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
-                    .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
-                    .withOrderedResults(false)
-                    .build();
-
-        //write data to csv file
-            writer.write(productUserHabitsRepository.findAll());
-        } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException | IOException e) {
-            logger.error(e.getMessage());
-        }
     }
 
     @Loggable
