@@ -20,7 +20,8 @@ import {
   EuiHeaderSectionItem,
   EuiHeaderLogo,
   EuiHeaderLinks,
-  EuiHeaderLink
+  EuiHeaderLink,
+  EuiFieldText
 } from '@elastic/eui';
 
 // set up cookies
@@ -131,7 +132,6 @@ export default class DataEntreprise extends Component {
   }
 
   render() {
-
 
     const button = (
       <EuiButton
@@ -246,11 +246,9 @@ export default class DataEntreprise extends Component {
                       isInvalid={this.state.keyError != null}
                       error={this.state.keyError}
                     >
-                      <EuiFieldNumber
+                      <EuiFieldText
                         placeholder="Key"
                         id="key"
-                        min={0}
-                        max={100}
                         name="key"
                         onChange={(e) => this.onInputChange(e)}
                         aria-label="key"
