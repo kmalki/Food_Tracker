@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import '../App.css';
-
 import AuthService from '../services/auth-service';
 import axios from "axios";
 import ProfilePopover from './profile_popover.js';
@@ -24,20 +23,88 @@ import {
   EuiHeaderLinks,
   EuiHeaderLink,
   EuiDatePicker,
-  EuiDatePickerRange
+  EuiDatePickerRange,
+  EuiSpacer,
+  EuiGlobalToastList
 } from '@elastic/eui';
 
 export default function Home() {
 
+  const API_URL_PRODUCTS = 'http://localhost:8080/products/';
+
   const [items, setItems] = useState([]);
-  const [startDate, setstartDate] = useState(moment());
-  const [endDate, setendDate] = useState(moment().add(10, "d"));
+  const [startDate, setstartDate] = useState(moment().subtract(7, "d"));
+  const [endDate, setendDate] = useState(moment());
+  const [toasts, setToasts] = useState([]);
+  const [dates, setdates] = useState([moment().subtract(7, "d"), moment()]);
+  const [glucideArray, setglucideArray] = useState([]);
+  const [lipideArray, setlipideArray] = useState([]);
+  const [proteineArray, setproteineArray] = useState([]);
+
+  const toastsList = [
+    {
+      id: "0",
+      title: 'Erreur',
+      color: 'danger',
+      iconType: 'help',
+      text: <p>Une erreur est survenue</p>
+    }
+  ];
+
+  useEffect(() => {
+
+    requestGraphData();
+
+    // eslint-disable-next-line
+  }, [])
+
+  const requestGraphData = () => {
+    axios.post(API_URL_PRODUCTS + 'getNutrition',
+      {
+        "less": {
+          "year": endDate.year(),
+          "month": endDate.month() + 1,
+          "day": endDate.date()
+        },
+        "greater": {
+          "year": startDate.year(),
+          "month": startDate.month() + 1,
+          "day": startDate.date()
+        }
+      }, config)
+      .then((response) => {
+        setdates(response.data.dates.map(x => moment({ year: x.year, month: x.month - 1, day: x.day })));
+        setglucideArray(response.data.glucide);
+        setlipideArray(response.data.lipide);
+        setproteineArray(response.data.proteine);
+      }, (error) => {
+        setdates([startDate, endDate]);
+        console.log(error);
+        setToasts(toasts.concat(toastsList[0]));
+      });
+  }
+
+  const removeToast = removedToast => {
+    setToasts(toasts.filter(toast => toast.id !== removedToast.id));
+  };
 
   const handleChangeStart = date => {
+
     setstartDate(date);
-    console.log(startDate);
+
+    if (startDate < endDate) {
+      requestGraphData();
+    }
   }
-  const handleChangeEnd = date => setendDate(date);
+
+  const handleChangeEnd = date => {
+
+    setendDate(date);
+
+    if (startDate < endDate) {
+      requestGraphData();
+    }
+  }
 
   const config = {
     headers: {
@@ -46,24 +113,40 @@ export default function Home() {
   }
 
   const data = {
-    labels: [moment().add(1, "d"), moment().add(2, "d"), moment().add(3, "d"), moment().add(4, "d")],
+    labels: dates,
     datasets: [
       {
-        label: 'My First dataset',
+        label: 'Lipides (g)',
+        fill: false,
+        lineTension: 0.1,
+        borderColor: 'rgba(10,19,92,1)',
+        data: lipideArray
+      },
+      {
+        label: 'Glucides (g)',
+        fill: false,
+        lineTension: 0.1,
+        borderColor: 'rgba(178, 36, 255, 1)',
+        data: glucideArray
+      },
+      {
+        label: 'Proteine (g)',
         fill: false,
         lineTension: 0.1,
         borderColor: 'rgba(75,192,192,1)',
-        data: [65, 59, 80, 81, 56, 55, 40]
+        data: proteineArray
       }
     ]
   };
 
-  const API_URL_PRODUCTS = 'http://localhost:8080/products/';
   useEffect(() => {
     axios
       .get(API_URL_PRODUCTS + 'getProducts', config)
       .then((response) => {
         setItems(response.data);
+      }, (error) => {
+        console.log(error);
+        setToasts(toasts.concat(toastsList[0]));
       })
     // eslint-disable-next-line
   }, [])
@@ -102,6 +185,11 @@ export default function Home() {
           </EuiHeaderSectionItem>
         </EuiHeader>
         <EuiPage>
+          <EuiGlobalToastList
+            toasts={toasts}
+            dismissToast={removeToast}
+            toastLifeTimeMs={6000}
+          />
           <EuiPageBody>
             <EuiPageContent>
               <EuiPageContentHeader>
@@ -131,8 +219,9 @@ export default function Home() {
                   </EuiFlexItem>
                   <EuiFlexItem>
                     <EuiTitle size='m' style={{ margin: 'auto' }}>
-                      <h2>Graphes</h2>
+                      <h2>Graphe nutritionnel</h2>
                     </EuiTitle>
+                    <EuiSpacer size='s' />
                     <EuiFlexGroup justifyContent="spaceAround">
                       <EuiFlexItem grow={false}>
                         <EuiDatePickerRange
@@ -159,10 +248,10 @@ export default function Home() {
                         />
                       </EuiFlexItem>
                     </EuiFlexGroup>
+                    <EuiSpacer />
                     <EuiFlexGroup justifyContent="spaceAround">
                       <EuiFlexItem>
                         <div>
-                          <h2>Line Example</h2>
                           <Line
                             data={data}
                             options={{
@@ -172,7 +261,7 @@ export default function Home() {
                                 xAxes: [{
                                   ticks: {
                                     autoSkip: true,
-                                    maxTicksLimit: 10
+                                    maxTicksLimit: 10,
                                   },
                                   type: 'time',
                                   time: {
