@@ -37,8 +37,10 @@ export default class DataEntreprise extends Component {
       error: [],
       ageMin: null,
       ageMax: null,
+      key: null,
       ageMinError: null,
       ageMaxError: null,
+      keyError: null,
       radioIdSelected: 'Homme'
     }
   }
@@ -53,6 +55,7 @@ export default class DataEntreprise extends Component {
     this.setState({ error: [] });
     this.setState({ ageMinError: null });
     this.setState({ ageMaxError: null });
+    this.setState({ keyError: null });
 
     if (!this.state.ageMin) {
       this.setState({ ageMinError: 'Age minimum vide' })
@@ -82,6 +85,12 @@ export default class DataEntreprise extends Component {
       this.setState({ ageError: 'Age maximum doit être supérieur à l\'age minimum' })
       this.setState({ ageMinError: 'Age maximum doit être supérieur à l\'age minimum' })
       this.setState({ error: ['Age maximum doit être supérieur à l\'age minimum'] })
+      return;
+    }
+
+    if (!this.state.key) {
+      this.setState({ keyError: 'La clé ne peut pas être vide' })
+      this.setState({ error: ['La clé ne peut pas être vide'] })
       return;
     }
 
@@ -229,6 +238,22 @@ export default class DataEntreprise extends Component {
                         name="ageMax"
                         onChange={(e) => this.onInputChange(e)}
                         aria-label="ageMax"
+                      />
+                    </EuiFormRow>
+
+                    <EuiFormRow
+                      label="API Key"
+                      isInvalid={this.state.keyError != null}
+                      error={this.state.keyError}
+                    >
+                      <EuiFieldNumber
+                        placeholder="Key"
+                        id="key"
+                        min={0}
+                        max={100}
+                        name="key"
+                        onChange={(e) => this.onInputChange(e)}
+                        aria-label="key"
                       />
                     </EuiFormRow>
 
