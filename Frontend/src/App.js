@@ -14,6 +14,7 @@ import Login from './components/login.js';
 import Profile from './components/profile.js'
 import Consumed from './components/consumed.js'
 import Help from './components/help.js'
+import DataEntreprise from './components/dataEntreprise.js'
  
 function App() {
 
@@ -40,6 +41,9 @@ function App() {
         </Route>
         <Route path="/help">
           <Help />
+        </Route>
+        <Route path="/download">
+          <DataEntreprise />
         </Route>
         <Route path="/">
           <Register />

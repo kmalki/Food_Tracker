@@ -43,6 +43,9 @@ export default function Home() {
   const [glucideArray, setglucideArray] = useState([]);
   const [lipideArray, setlipideArray] = useState([]);
   const [proteineArray, setproteineArray] = useState([]);
+  const [calorieArray, setcalorieArray] = useState([]);
+  const [calciumArray, setcalciumArray] = useState([]);
+  const [selArray, setselArray] = useState([]);
   const [showProgress, setShowProgress] = useState(true);
 
   const toastsList = [
@@ -83,10 +86,14 @@ export default function Home() {
         }
       }, config)
       .then((response) => {
+        console.log(response);
         setdates(response.data.dates.map(x => moment({ year: x.year, month: x.month - 1, day: x.day })));
         setglucideArray(response.data.glucide);
         setlipideArray(response.data.lipide);
         setproteineArray(response.data.proteine);
+        setcalorieArray(response.data.calories);
+        setcalciumArray(response.data.calcium);
+        setselArray(response.data.sel);
         toggleProgress();
       }, (error) => {
         setdates([startDate, endDate]);
@@ -151,6 +158,39 @@ export default function Home() {
     ]
   };
 
+  const data2 = {
+    labels: dates,
+    datasets: [
+      {
+        label: 'Calories (Kcal)',
+        fill: false,
+        lineTension: 0.1,
+        borderColor: 'rgba(174, 41, 41, 1)',
+        data: calorieArray
+      }
+    ]
+  };
+
+  const data3 = {
+    labels: dates,
+    datasets: [
+      {
+        label: 'Sel (mg)',
+        fill: false,
+        lineTension: 0.1,
+        borderColor: 'rgba(0, 113, 219, 1)',
+        data: selArray
+      },
+      {
+        label: 'Calcium (mg)',
+        fill: false,
+        lineTension: 0.1,
+        borderColor: 'rgba(219, 139, 0, 1)',
+        data: calciumArray
+      }
+    ]
+  };
+
   useEffect(() => {
     axios
       .get(API_URL_PRODUCTS + 'getProducts', config)
@@ -204,7 +244,8 @@ export default function Home() {
                 Mes recettes
               </EuiHeaderLink>
               <EuiHeaderLink href="/consumed">Mes produits consommés</EuiHeaderLink>
-              <EuiHeaderLink iconType="help" href="/help">
+              <EuiHeaderLink href="/download">Télécharger les données clients</EuiHeaderLink>
+                <EuiHeaderLink iconType="help" href="/help">
                 Help
           </EuiHeaderLink>
             </EuiHeaderLinks>
@@ -245,7 +286,7 @@ export default function Home() {
                   </EuiFlexItem>
                   <EuiFlexItem>
                     <EuiTitle size='m' style={{ margin: 'auto' }}>
-                      <h2>Graphe nutritionnel</h2>
+                      <h2>Graphes nutritionnels</h2>
                     </EuiTitle>
                     <EuiSpacer size='s' />
                     <EuiFlexGroup justifyContent="spaceAround">
@@ -341,6 +382,125 @@ export default function Home() {
                                   label: {
                                     enabled: true,
                                     content: 'Limite journalière protéine (50g)'
+                                  }
+                                }]
+                              }
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <Line
+                            data={data2}
+                            options={{
+                              responsive: true,
+                              maintainAspectRatio: true,
+                              scales: {
+                                xAxes: [{
+                                  ticks: {
+                                    autoSkip: true,
+                                    maxTicksLimit: 10,
+                                  },
+                                  type: 'time',
+                                  time: {
+                                    tooltipFormat: 'MMM DD, YYYY',
+                                    displayFormats: {
+                                      'millisecond': 'MMM DD, YYYY',
+                                      'second': 'MMM DD, YYYY',
+                                      'minute': 'MMM DD, YYYY',
+                                      'hour': 'MMM DD, YYYY',
+                                      'day': 'MMM DD, YYYY',
+                                      'week': 'MMM DD, YYYY',
+                                      'month': 'MMM DD, YYYY',
+                                      'quarter': 'MMM DD, YYYY',
+                                      'year': 'MMM DD, YYYY',
+                                    }
+                                  }
+                                }],
+                                yAxes: [{
+                                  ticks: {
+                                      suggestedMin: 0,
+                                      suggestedMax: 2500
+                                  }
+                              }]
+                              },
+                              annotation: {
+                                annotations: [{
+                                  type: 'line',
+                                  mode: 'horizontal',
+                                  scaleID: 'y-axis-0',
+                                  value: 2000,
+                                  borderColor: 'rgba(174, 41, 41, 0.5)',
+                                  borderWidth: 2,
+                                  label: {
+                                    enabled: true,
+                                    content: 'Limite journalière calories (Kcal)'
+                                  }
+                                }]
+                              }
+                            }}
+                          />
+                        </div>
+
+
+                        <div>
+                          <Line
+                            data={data3}
+                            options={{
+                              responsive: true,
+                              maintainAspectRatio: true,
+                              scales: {
+                                xAxes: [{
+                                  ticks: {
+                                    autoSkip: true,
+                                    maxTicksLimit: 10,
+                                  },
+                                  type: 'time',
+                                  time: {
+                                    tooltipFormat: 'MMM DD, YYYY',
+                                    displayFormats: {
+                                      'millisecond': 'MMM DD, YYYY',
+                                      'second': 'MMM DD, YYYY',
+                                      'minute': 'MMM DD, YYYY',
+                                      'hour': 'MMM DD, YYYY',
+                                      'day': 'MMM DD, YYYY',
+                                      'week': 'MMM DD, YYYY',
+                                      'month': 'MMM DD, YYYY',
+                                      'quarter': 'MMM DD, YYYY',
+                                      'year': 'MMM DD, YYYY',
+                                    }
+                                  }
+                                }],
+                                yAxes: [{
+                                  ticks: {
+                                      suggestedMin: 0,
+                                      suggestedMax: 2500
+                                  }
+                              }]
+                              },
+                              annotation: {
+                                annotations: [{
+                                  type: 'line',
+                                  mode: 'horizontal',
+                                  scaleID: 'y-axis-0',
+                                  value: 2000,
+                                  borderColor: 'rgba(0, 113, 219, 0.5)',
+                                  borderWidth: 2,
+                                  label: {
+                                    enabled: true,
+                                    content: 'Limite journalière sodium (mg)'
+                                  }
+                                },
+                                {
+                                  type: 'line',
+                                  mode: 'horizontal',
+                                  scaleID: 'y-axis-0',
+                                  value: 950,
+                                  borderColor: 'rgba(219, 139, 0, 0.5)',
+                                  borderWidth: 2,
+                                  label: {
+                                    enabled: true,
+                                    content: 'Limite journalière calcium (mg))'
                                   }
                                 }]
                               }

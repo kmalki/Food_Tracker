@@ -36,7 +36,8 @@ export default function Help() {
                 Mes paniers
           </EuiHeaderLink>
               <EuiHeaderLink href="/consumed">Mes produits consommés</EuiHeaderLink>
-              <EuiHeaderLink iconType="help" href="/help">
+              <EuiHeaderLink href="/download">Télécharger les données clients</EuiHeaderLink>
+                <EuiHeaderLink iconType="help" href="/help">
                 Help
       </EuiHeaderLink>
             </EuiHeaderLinks>

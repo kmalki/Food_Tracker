@@ -242,6 +242,8 @@ export default function Consumed() {
                 Mes paniers
         </EuiHeaderLink>
               <EuiHeaderLink href="/recettes">Mes recettes</EuiHeaderLink>
+              <EuiHeaderLink href="/download">Télécharger les données clients</EuiHeaderLink>
+
               <EuiHeaderLink iconType="help" href="#">
                 Help
         </EuiHeaderLink>
