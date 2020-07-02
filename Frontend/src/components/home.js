@@ -142,7 +142,7 @@ export default function Home() {
         data: glucideArray
       },
       {
-        label: 'Proteine (g)',
+        label: 'Proteines (g)',
         fill: false,
         lineTension: 0.1,
         borderColor: 'rgba(75,192,192,1)',
