@@ -5,6 +5,7 @@ import axios from "axios";
 import ProfilePopover from './profile_popover.js';
 import moment from "moment";
 import { Line } from 'react-chartjs-2';
+import 'chartjs-plugin-annotation';
 
 import {
   EuiPage,
@@ -302,6 +303,44 @@ export default function Home() {
                                       'quarter': 'MMM DD, YYYY',
                                       'year': 'MMM DD, YYYY',
                                     }
+                                  }
+                                }]
+                              },
+                              annotation: {
+                                annotations: [{
+                                  type: 'line',
+                                  mode: 'horizontal',
+                                  scaleID: 'y-axis-0',
+                                  value: 260,
+                                  borderColor: 'rgba(178, 36, 255, 0.5)',
+                                  borderWidth: 2,
+                                  label: {
+                                    enabled: true,
+                                    content: 'Limite journalière glucide (260g)'
+                                  }
+                                },
+                                {
+                                  type: 'line',
+                                  mode: 'horizontal',
+                                  scaleID: 'y-axis-0',
+                                  value: 70,
+                                  borderColor: 'rgba(10,19,92, 0.5)',
+                                  borderWidth: 2,
+                                  label: {
+                                    enabled: true,
+                                    content: 'Limite journalière lipide (70g)'
+                                  }
+                                },
+                                {
+                                  type: 'line',
+                                  mode: 'horizontal',
+                                  scaleID: 'y-axis-0',
+                                  value: 50,
+                                  borderColor: 'rgba(75,192,192,1)',
+                                  borderWidth: 2,
+                                  label: {
+                                    enabled: true,
+                                    content: 'Limite journalière protéine (50g)'
                                   }
                                 }]
                               }
