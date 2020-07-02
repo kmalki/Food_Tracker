@@ -41,6 +41,7 @@ import {
   EuiHeaderLinks,
   EuiHeaderLink,
   EuiPanel
+  ,EuiIcon
 } from '@elastic/eui';
 
 export default function Home() {
@@ -473,7 +474,7 @@ export default function Home() {
         lang={'fr-FR'}
         className="euiTitle euiTitle--small"
       >
-        {isDictionWorking ? 'Diction en cours, vous pouvez parler' : 'Cliquer ici pour commencer la diction'}
+        {isDictionWorking ? 'Diction en cours, vous pouvez parler' : <Fragment> <EuiIcon type="play" size="xl" /> Cliquer ici pour commencer la diction</Fragment>}
       </DictateButton>
       {isDictionWorking ? (
         <Fragment>
