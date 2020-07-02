@@ -16,7 +16,7 @@ public class UserApp {
     private String username;
     private String password;
     private int age;
-    private String sexe;
+    private String gender;
 
     public long getId() {
         return id;
@@ -46,12 +46,12 @@ public class UserApp {
         this.age = age;
     }
 
-    public String getSexe() {
-        return sexe;
+    public String getGender() {
+        return gender;
     }
 
-    public void setSexe(String sexe) {
-        this.sexe = sexe;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class UserApp {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", age=" + age +
-                ", sexe='" + sexe + '\'' +
+                ", gender='" + gender + '\'' +
                 '}';
     }
 }

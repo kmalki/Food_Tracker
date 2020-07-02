@@ -117,7 +117,7 @@ public class ProductService {
                     product.getBrand(),
                     quantity,
                     user.getAge(),
-                    user.getSexe()
+                    user.getGender()
             );
         }else {
             productUserHabit.setQuantity(
