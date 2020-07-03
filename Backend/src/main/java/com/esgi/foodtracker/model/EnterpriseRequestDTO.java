@@ -5,14 +5,16 @@ public class EnterpriseRequestDTO {
     private String gender;
     private int ageGreaterThan;
     private int ageLessThan;
+    private String keyaccess;
 
     public EnterpriseRequestDTO() {
     }
 
-    public EnterpriseRequestDTO(String gender, int ageGreatherThan, int ageLessThan) {
+    public EnterpriseRequestDTO(String gender, int ageGreatherThan, int ageLessThan, String key) {
         this.gender = gender;
         this.ageGreaterThan = ageGreatherThan;
         this.ageLessThan = ageLessThan;
+        this.keyaccess = key;
     }
 
     public String getGender() {
@@ -39,12 +41,21 @@ public class EnterpriseRequestDTO {
         this.ageLessThan = ageLessThan;
     }
 
+    public String getKeyaccess() {
+        return keyaccess;
+    }
+
+    public void setKeyaccess(String keyaccess) {
+        this.keyaccess = keyaccess;
+    }
+
     @Override
     public String toString() {
         return "EnterpriseRequestDTO{" +
                 "gender='" + gender + '\'' +
                 ", ageGreaterThan=" + ageGreaterThan +
                 ", ageLessThan=" + ageLessThan +
+                ", keyaccess='" + keyaccess + '\'' +
                 '}';
     }
 }

@@ -20,17 +20,12 @@ public class UserController {
     final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private UserRepository userRepository;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     private ProductRepository productRepository;
-
-    public UserController(UserRepository userRepository,
-                          BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
 
     @Loggable
     @PostMapping("/sign-up")

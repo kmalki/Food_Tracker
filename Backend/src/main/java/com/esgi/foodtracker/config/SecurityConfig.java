@@ -22,6 +22,7 @@ import static com.esgi.foodtracker.constants.SecurityConstants.SIGN_UP_URL;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Autowired
     private final UserDetailsImplService userDetailsService;
     @Autowired
