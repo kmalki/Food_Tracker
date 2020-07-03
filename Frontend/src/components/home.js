@@ -244,7 +244,7 @@ export default function Home() {
               </EuiHeaderLink>
               <EuiHeaderLink href="/consumed">Mes produits consommés</EuiHeaderLink>
               <EuiHeaderLink href="/download">Télécharger les données clients</EuiHeaderLink>
-                <EuiHeaderLink iconType="help" href="/help">
+              <EuiHeaderLink iconType="help" href="/help">
                 Help
           </EuiHeaderLink>
             </EuiHeaderLinks>
@@ -344,12 +344,12 @@ export default function Home() {
                                       'year': 'MMM DD, YYYY',
                                     }
                                   },
+                                }],
                                 yAxes: [{
                                   ticks: {
-                                      suggestedMin: 0,
-                                      suggestedMax: 300
+                                    suggestedMin: 0,
+                                    suggestedMax: 300
                                   }
-                              }]
                                 }]
                               },
                               annotation: {
@@ -424,10 +424,10 @@ export default function Home() {
                                 }],
                                 yAxes: [{
                                   ticks: {
-                                      suggestedMin: 0,
-                                      suggestedMax: 2500
+                                    suggestedMin: 0,
+                                    suggestedMax: 2500
                                   }
-                              }]
+                                }]
                               },
                               annotation: {
                                 annotations: [{
@@ -478,10 +478,10 @@ export default function Home() {
                                 }],
                                 yAxes: [{
                                   ticks: {
-                                      suggestedMin: 0,
-                                      suggestedMax: 2500
+                                    suggestedMin: 0,
+                                    suggestedMax: 2500
                                   }
-                              }]
+                                }]
                               },
                               annotation: {
                                 annotations: [{
