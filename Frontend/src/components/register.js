@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import AuthService from '../services/auth-service';
 import {
   EuiButton,
   EuiPage,
@@ -96,7 +95,6 @@ export default class Register extends Component {
 
   launchRegisterRequest = async () => {
 
-    console.log(parseInt(this.state.age, 10));
     
     /* eslint-disable no-console */
     /*

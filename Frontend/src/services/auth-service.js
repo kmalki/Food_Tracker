@@ -10,7 +10,6 @@ class AuthService {
                 password
             })
             .then(response => {
-                console.log(response.headers.authorization);
                 if (response.headers.authorization) {
                     localStorage.setItem("foodTrackerAuthorization", JSON.stringify(response.headers.authorization));
                     localStorage.setItem("foodTrackerUsername", username);                
@@ -28,7 +27,6 @@ class AuthService {
 
     register(username, password, age, gender) {
 
-        console.log(username, password, age, gender);
         return axios.post(API_URL + "users/sign-up", {
             username,
             password,

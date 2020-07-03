@@ -107,10 +107,17 @@ export default class DataEntreprise extends Component {
 
     const API_URL_ENTREPRISE = 'http://localhost:8080/enterprise/export';
     var fileDownload = require('js-file-download');
+
+    let gender = null;
+
+    if (this.state.radioIdSelected !== "Les deux") {
+      gender = this.state.radioIdSelected;
+    }
+  
     axios
       .post(API_URL_ENTREPRISE,
         {
-          gender: this.state.radioIdSelected,
+          gender: gender,
           ageGreaterThan: parseInt(this.state.ageMin, 10),
           ageLessThan: parseInt(this.state.ageMax, 10),
           keyaccess: this.state.key
