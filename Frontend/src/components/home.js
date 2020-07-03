@@ -86,7 +86,6 @@ export default function Home() {
         }
       }, config)
       .then((response) => {
-        console.log(response);
         setdates(response.data.dates.map(x => moment({ year: x.year, month: x.month - 1, day: x.day })));
         setglucideArray(response.data.glucide);
         setlipideArray(response.data.lipide);

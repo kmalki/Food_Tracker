@@ -46,7 +46,6 @@ export default class DataEntreprise extends Component {
     }
   }
 
-
   onInputChange = e => {
     this.setState({ [e.target.name]: e.target.value })
   }
@@ -107,31 +106,24 @@ export default class DataEntreprise extends Component {
     }
 
     const API_URL_ENTREPRISE = 'http://localhost:8080/enterprise/export';
-
-    console.log(        {
-      gender: this.state.radioIdSelected,
-      ageGreaterThan: this.state.ageMin,
-      ageLessThan: this.state.ageMax
-    });
-
+    var fileDownload = require('js-file-download');
     axios
-      .get(API_URL_ENTREPRISE,
+      .post(API_URL_ENTREPRISE,
         {
-          body: {
-            gender: this.state.radioIdSelected,
-            ageGreaterThan: this.state.ageMin,
-            ageLessThan: this.state.ageMax
-          }
+          gender: this.state.radioIdSelected,
+          ageGreaterThan: parseInt(this.state.ageMin, 10),
+          ageLessThan: parseInt(this.state.ageMax, 10),
+          keyaccess: this.state.key
         }, config)
       .then((response) => {
-        console.log(response);
+        fileDownload(response.data, 'report.csv');
       }, (error) => {
         console.log(error);
       })
-
   }
 
   render() {
+
 
     const button = (
       <EuiButton
@@ -186,7 +178,7 @@ export default class DataEntreprise extends Component {
                 Mes paniers
               </EuiHeaderLink>
               <EuiHeaderLink href="/consumed">Mes produits consommés</EuiHeaderLink>
-                <EuiHeaderLink iconType="help" href="/help">
+              <EuiHeaderLink iconType="help" href="/help">
                 Help
       </EuiHeaderLink>
             </EuiHeaderLinks>

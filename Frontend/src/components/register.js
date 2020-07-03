@@ -91,13 +91,15 @@ export default class Register extends Component {
       return;
     }
 
-    console.log(this.state);
     this.launchRegisterRequest();
   }
 
   launchRegisterRequest = async () => {
 
+    console.log(parseInt(this.state.age, 10));
+    
     /* eslint-disable no-console */
+    /*
     AuthService.register(
       this.state.login,
       this.state.password,
@@ -126,6 +128,7 @@ export default class Register extends Component {
         });
       }
     );
+    */
   }
 
   render() {

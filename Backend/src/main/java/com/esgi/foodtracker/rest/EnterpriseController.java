@@ -53,7 +53,7 @@ public class EnterpriseController {
     }
 
     @Loggable
-    @GetMapping("/export")
+    @PostMapping("/export")
     public void exportData(@RequestBody EnterpriseRequestDTO enterpriseRequestDTO, HttpServletResponse response){
 
         List<Enterprise> enterpriseList = enterpriseRepository.findAll();
