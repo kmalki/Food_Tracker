@@ -343,7 +343,13 @@ export default function Home() {
                                       'quarter': 'MMM DD, YYYY',
                                       'year': 'MMM DD, YYYY',
                                     }
+                                  },
+                                yAxes: [{
+                                  ticks: {
+                                      suggestedMin: 0,
+                                      suggestedMax: 300
                                   }
+                              }]
                                 }]
                               },
                               annotation: {
