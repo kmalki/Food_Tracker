@@ -40,8 +40,11 @@ import {
   EuiHeaderLogo,
   EuiHeaderLinks,
   EuiHeaderLink,
-  EuiPanel
-  ,EuiIcon
+  EuiPanel,
+  EuiIcon,
+  EuiDescribedFormGroup,
+  EuiForm,
+  EuiFormRow
 } from '@elastic/eui';
 
 export default function Home() {
@@ -58,6 +61,8 @@ export default function Home() {
   const [toasts, setToasts] = useState([]);
   const [isDictionWorking, setisDictionWorking] = useState(false);
   const [IsModalManualVisible, setIsModalManualVisible] = useState(false);
+  const [quantityMini, setQuantityMini] = useState('3');
+  const [brands, setBrands] = useState([]);
 
   const toastsList = [
     {
@@ -171,8 +176,6 @@ export default function Home() {
     }
   });
 
-  let brands = ["TOTO", "TATA"];
-
   const API_URL_PRODUCTS = 'http://localhost:8080/products/';
   useEffect(() => {
     axios
@@ -182,6 +185,12 @@ export default function Home() {
       }, () => {
         handleToastError();
       })
+
+    axios.get(`${API_URL_PRODUCTS}getListHabits?mini=${quantityMini}`, config)
+      .then((response) => {
+        let brands = response.data.map(x => (x.product_name));
+        setBrands(brands);
+      });
 
     navigator.getMedia = (navigator.getUserMedia ||
       navigator.webkitGetUserMedia ||
@@ -413,6 +422,15 @@ export default function Home() {
       console.log(error);
       setToasts(toasts.concat(toastsList[6]));
     });
+  }
+
+  function proposalClick() {
+
+    axios.get(`${API_URL_PRODUCTS}getListHabits?mini=${quantityMini}`, config)
+      .then((response) => {
+        let brands = response.data.map(x => (x.product_name));
+        setBrands(brands);
+      });
   }
 
   function onDictate(text) {
@@ -674,24 +692,45 @@ export default function Home() {
                       </EuiFlexGroup>
                     </EuiFlexItem>
                     <EuiFlexItem>
-                      <EuiTitle size='m' style={{ margin: 'auto' }}>
-                        <h2>Ma liste de course</h2>
-                      </EuiTitle>
-                      <EuiSpacer />
                       <EuiFlexGroup direction="column">
                         <div>
-                          {brands.map((brand) => {
-                            return <Fragment>
+                          <EuiForm>
+                            <EuiDescribedFormGroup
+                              title={<h4>Ma liste de course</h4>}
+                              description={
+                                <Fragment>
+                                  Définir une valeur seuil à partir de laquelle les produits que vous achetez le plus souvent vous seront
+                                  proposé pour créer une liste de course (Exemple : pour une valeur de 3, les produits ayant été consommé plus de 3 fois vous
+                                  seront proposés).<br/>De base, cette valeur est égale à 3.
+                                </Fragment>
+                              }>
+                              <EuiFormRow label="Valeur seuil">
+                                <EuiFieldNumber
+                                  style={{ display: 'flex' }}
+                                  placeholder="3"
+                                  value={quantityMini}
+                                  onChange={e => setQuantityMini(parseInt(e.target.value, 10))}
+                                />
+                              </EuiFormRow>
+                              <EuiFormRow hasEmptyLabelSpace>
+                                <EuiButton onClick={proposalClick}>Proposer</EuiButton>
+                              </EuiFormRow>
+                            </EuiDescribedFormGroup>
+                          </EuiForm>
+                          <EuiSpacer />
+                          {brands.map((brand, i) => {
+                            return <Fragment key={i}>
                               <EuiFlexItem style={{ margin: 'auto', maxWidth: 344 }} grow={false}>
                                 <EuiPanel paddingSize="m">
                                   <EuiText textAlign="center">{brand}</EuiText>
                                 </EuiPanel>
                               </EuiFlexItem>
-                              <EuiSpacer size="s"/>
+                              <EuiSpacer size="s" />
                             </Fragment>
                           })}
                         </div>
                       </EuiFlexGroup>
+                      <EuiSpacer />
                     </EuiFlexItem>
                   </EuiFlexGroup>
                   <EuiSpacer />
