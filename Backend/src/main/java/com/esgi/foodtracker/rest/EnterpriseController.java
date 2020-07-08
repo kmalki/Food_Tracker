@@ -44,9 +44,6 @@ public class EnterpriseController {
     @PostMapping("/addEnterprise")
     public ResponseEntity<String> addEnterprise(@RequestBody Enterprise enterpriseDTO){
         String key = enterpriseDTO.getKeyaccess();
-        for(int i=0;i<10;i++){
-            logger.info(bCryptPasswordEncoder.encode(key));
-        }
         enterpriseDTO.setKeyaccess(bCryptPasswordEncoder.encode(enterpriseDTO.getKeyaccess()));
         enterpriseRepository.save(enterpriseDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(String.format("Created, key=%s", key));

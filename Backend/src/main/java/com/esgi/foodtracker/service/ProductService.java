@@ -16,10 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -243,5 +241,12 @@ public class ProductService {
             logger.error(e.getMessage());
         }
         return null;
+    }
+
+    public List<ProductUserHabitDTO> getListHabitsUser(int n) {
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<ProductUserHabitDTO> productUserHabitDTOS = productUserHabitsRepository.
+                findProductUserHabitDTOSByPuk_Userid(username);
+        return productUserHabitDTOS.stream().filter(product -> product.getQuantity() >= n).collect(Collectors.toList());
     }
 }

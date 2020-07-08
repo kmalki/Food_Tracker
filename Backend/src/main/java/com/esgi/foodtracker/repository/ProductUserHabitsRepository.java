@@ -34,4 +34,7 @@ public interface ProductUserHabitsRepository extends CassandraRepository<Product
     @AllowFiltering
     List<ProductUserHabitDTO> findProductUserHabitDTOSByAgeGreaterThanEqual(int age1);
 
+    @AllowFiltering
+    List<ProductUserHabitDTO> findProductUserHabitDTOSByPuk_Userid(String username);
+
 }

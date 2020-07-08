@@ -91,4 +91,10 @@ public class ProductController {
     public ResponseEntity<NutritionGraphDTO> getNutrition(@RequestBody BigDateDTO date){
         return ResponseEntity.status(HttpStatus.OK).body(productService.getUserNutrition(date.getGreater(), date.getLess()));
     }
+
+    @Loggable
+    @GetMapping("/getListHabits")
+    public ResponseEntity<List<ProductUserHabitDTO>> getHabits(@RequestParam("mini") int n){
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getListHabitsUser(n));
+    }
 }
