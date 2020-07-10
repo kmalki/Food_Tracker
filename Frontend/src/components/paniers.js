@@ -51,7 +51,9 @@ export default function Home() {
 
   const [items, setItems] = useState([]);
   const [file, setFile] = useState(buildFileSelector());
+  const [fileFruit, setFileFruit] = useState(buildFileSelectorFruits());
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalFruitVisible, setIsModalFruitVisible] = useState(false);
   const [isModalSpeechVisible, setIsModalSpeechVisible] = useState(false);
   const [codeValue, setcodeValue] = useState('');
   const [quantity, setQuantity] = useState('1');
@@ -124,6 +126,12 @@ export default function Home() {
     if (elementsEuiOverlay[0]) elementsEuiOverlay[0].remove();
   }
 
+  const closeModalFruits = () => {
+    setIsModalFruitVisible(false);
+    let elementsEuiOverlay = document.getElementsByClassName('euiOverlayMask');
+    if (elementsEuiOverlay[0]) elementsEuiOverlay[0].remove();
+  }
+
   const closeSpeechModal = () => {
     setIsModalSpeechVisible(false);
     let elementsEuiOverlay = document.getElementsByClassName('euiOverlayMask');
@@ -158,6 +166,7 @@ export default function Home() {
   }
 
   const showModal = () => setIsModalVisible(true);
+  const showModalFruits = () => setIsModalFruitVisible(true);
   const showModalSpeech = () => setIsModalSpeechVisible(true);
 
   const config = {
@@ -286,6 +295,11 @@ export default function Home() {
     }
   }
 
+  const handleFileSelectFruits = (e) => {
+    e.preventDefault();
+    fileFruit.click();
+  }
+
   const getProducts = () => {
     return axios
       .get(API_URL_PRODUCTS + 'getProducts', config)
@@ -296,6 +310,10 @@ export default function Home() {
 
   function saveAction() {
     addNewItem();
+  }
+
+  function saveActionFruits() {
+    addNewItemFruit();
   }
 
   function saveActionManuel() {
@@ -401,8 +419,47 @@ export default function Home() {
     });
   }
 
+  function addNewItemFruit() {
+    const data = new FormData();
+    data.append('image', fileFruit.files[0]);
+    data.append("quantity", quantity);
+    axios.post(API_URL_PRODUCTS + 'addFruits', data, config).then(() => {
+      getProducts().then((response) => {
+        setItems(response.data);
+        fileFruit.remove();
+        setFileFruit(buildFileSelectorFruits());
+        closeModalFruits();
+        setToasts(toasts.concat(toastsList[0]));
+      });
+    }, (error) => {
+      console.log(error.response);
+      if (error.response) {
+        if (error.response.status === 404) {
+          fileFruit.remove();
+          setFileFruit(buildFileSelectorFruits());
+          closeModalFruits();
+          setToasts(toasts.concat(toastsList[3]));
+        } else if (error.response.status === 400) {
+          fileFruit.remove();
+          setFileFruit(buildFileSelectorFruits());
+          closeModalFruits();
+        }
+      }
+      else {
+        file.remove();
+        setFile(buildFileSelector());
+        closeModalFruits();
+        setToasts(toasts.concat(toastsList[6]));
+      }
+    });
+  }
+
   function launchModal() {
     showModal();
+  }
+
+  function launchModalFruit() {
+    showModalFruits();
   }
 
   function openModalManually() {
@@ -451,6 +508,14 @@ export default function Home() {
     return fileSelector;
   }
 
+  function buildFileSelectorFruits() {
+    const fileSelector = document.createElement('input');
+    fileSelector.setAttribute('type', 'file');
+    fileSelector.setAttribute('accept', 'image/*');
+    fileSelector.onchange = launchModalFruit;
+    return fileSelector;
+  }
+
   let modal = (
     <EuiOverlayMask>
       <EuiModal onClose={closeModal}>
@@ -476,6 +541,29 @@ export default function Home() {
           <EuiButtonEmpty onClick={closeModal}>Cancel</EuiButtonEmpty>
           <EuiButton onClick={saveAction} fill>
             Save
+            </EuiButton>
+        </EuiModalFooter>
+      </EuiModal>
+    </EuiOverlayMask>
+  )
+
+  let modalFruits = (
+    <EuiOverlayMask>
+      <EuiModal onClose={closeModalFruits}>
+        <EuiModalHeader>
+          <EuiModalHeaderTitle>Définir la quantité</EuiModalHeaderTitle>
+        </EuiModalHeader>
+        <EuiModalBody>
+          <EuiFieldNumber
+            placeholder="1"
+            value={quantity}
+            onChange={e => setQuantity(parseInt(e.target.value, 10))}
+          />
+        </EuiModalBody>
+        <EuiModalFooter>
+          <EuiButtonEmpty onClick={closeModalFruits}>Cancel</EuiButtonEmpty>
+          <EuiButton onClick={saveActionFruits} fill>
+            Save Fruit
             </EuiButton>
         </EuiModalFooter>
       </EuiModal>
@@ -640,6 +728,7 @@ export default function Home() {
               toastLifeTimeMs={6000}
             />
             {isModalVisible && modal}
+            {isModalFruitVisible && modalFruits}
             {isModalSpeechVisible && modalSpeech}
             {IsModalManualVisible && modalManually}
             <EuiPageBody>
@@ -685,6 +774,11 @@ export default function Home() {
                             <EuiFlexItem>
                               <EuiButton iconType="plusInCircleFilled" onClick={openModalManually}>
                                 En dictant/manuellement
+                            </EuiButton>
+                            </EuiFlexItem>
+                            <EuiFlexItem>
+                              <EuiButton iconType="plusInCircleFilled" onClick={handleFileSelectFruits}>
+                                Fruits
                             </EuiButton>
                             </EuiFlexItem>
                           </EuiFlexGroup>
