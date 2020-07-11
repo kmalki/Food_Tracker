@@ -2,7 +2,6 @@ package com.esgi.foodtracker.rest;
 
 import com.esgi.foodtracker.model.*;
 import com.esgi.foodtracker.repository.ProductRepository;
-import com.esgi.foodtracker.repository.ProductUserHabitsRepository;
 import com.esgi.foodtracker.service.ProductService;
 import com.github.rozidan.springboot.logger.Loggable;
 import org.slf4j.Logger;
@@ -12,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -97,4 +99,19 @@ public class ProductController {
     public ResponseEntity<List<ProductUserHabitDTO>> getHabits(@RequestParam("mini") int n){
         return ResponseEntity.status(HttpStatus.OK).body(productService.getListHabitsUser(n));
     }
+
+    @Loggable
+    @PostMapping("/addFruits")
+    public ResponseEntity<String> addFruit(@RequestParam("image") MultipartFile file,
+                                           @RequestParam("quantity") int quantity) throws IOException {
+        String label = productService.pushAndPredict(file);
+
+        ProductDTO product = new ProductDTO(label, label, "Fruit; Legume", "None");
+
+        productService.insertOrUpdateProductUser(product, quantity);
+        productService.insertOrUpdateProductUserHabits(product, quantity);
+
+        return ResponseEntity.status(HttpStatus.OK).body(String.format("Product %s added", label));
+    }
+
 }

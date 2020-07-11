@@ -1,5 +1,7 @@
 package com.esgi.foodtracker.service;
 
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobContainerClient;
 import com.datastax.driver.core.LocalDate;
 import com.esgi.foodtracker.model.*;
 import com.esgi.foodtracker.repository.*;
@@ -11,14 +13,20 @@ import com.google.zxing.oned.EAN13Reader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,6 +35,15 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     final static Logger logger = LoggerFactory.getLogger(ProductService.class);
+
+    @Value("${spring.cloud.azure.storage.account}")
+    private String storageAccount;
+
+    @Value("${model.port}")
+    private String portModel;
+
+    @Autowired
+    private BlobContainerClient blobContainerClient;
 
     @Autowired
     private UserRepository userRepository;
@@ -248,5 +265,36 @@ public class ProductService {
         List<ProductUserHabitDTO> productUserHabitDTOS = productUserHabitsRepository.
                 findProductUserHabitDTOSByPuk_Userid(username);
         return productUserHabitDTOS.stream().filter(product -> product.getQuantity() >= n).collect(Collectors.toList());
+    }
+
+    public String pushAndPredict(MultipartFile file) throws IOException {
+        BlobClient blobClient = blobContainerClient.getBlobClient(file.getOriginalFilename());
+        blobClient.upload(file.getInputStream(), file.getSize());
+        String urlToBlob = String.format("https://%s.blob.core.windows.net/images/%s", storageAccount,
+                file.getOriginalFilename());
+        URL url = new URL(String.format("http://localhost:%s/score", portModel));
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json; utf-8");
+        con.setRequestProperty("Accept", "application/json");
+        con.setDoOutput(true);
+
+        String jsonInputString = String.format("{\"url\": \"%s\"}", urlToBlob);
+
+        try(OutputStream os = con.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        }
+
+        StringBuilder response = new StringBuilder();
+        try(BufferedReader br = new BufferedReader(
+                new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
+            String responseLine = null;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+        }
+
+        return new ObjectMapper().readValue(response.toString(), ModelResponseDTO.class).getLabel();
     }
 }
