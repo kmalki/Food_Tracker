@@ -1,4 +1,6 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react';
+import AuthService from '../services/auth-service';
+
 import {
   EuiButton,
   EuiPage,
@@ -97,7 +99,7 @@ export default class Register extends Component {
 
     
     /* eslint-disable no-console */
-    /*
+    
     AuthService.register(
       this.state.login,
       this.state.password,
@@ -126,7 +128,7 @@ export default class Register extends Component {
         });
       }
     );
-    */
+    
   }
 
   render() {
