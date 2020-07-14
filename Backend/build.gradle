@@ -39,6 +39,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
     implementation group: 'com.datastax.oss', name: 'java-driver-core', version: '4.6.0'
     implementation 'com.opencsv:opencsv:4.5'
+    //compile group: 'com.microsoft.azure', name: 'spring-cloud-azure-starter-storage', version: '1.2.5'
+    compile group: 'com.azure', name: 'azure-storage-blob', version: '12.6.0'
+
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
