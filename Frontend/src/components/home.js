@@ -174,14 +174,14 @@ export default function Home() {
     labels: dates,
     datasets: [
       {
-        label: 'Sel (mg)',
+        label: 'Sel (g)',
         fill: false,
         lineTension: 0.1,
         borderColor: 'rgba(0, 113, 219, 1)',
         data: selArray
       },
       {
-        label: 'Calcium (mg)',
+        label: 'Calcium (g)',
         fill: false,
         lineTension: 0.1,
         borderColor: 'rgba(219, 139, 0, 1)',
@@ -479,7 +479,7 @@ export default function Home() {
                                 yAxes: [{
                                   ticks: {
                                     suggestedMin: 0,
-                                    suggestedMax: 2500
+                                    suggestedMax: 6
                                   }
                                 }]
                               },
@@ -488,24 +488,24 @@ export default function Home() {
                                   type: 'line',
                                   mode: 'horizontal',
                                   scaleID: 'y-axis-0',
-                                  value: 2000,
+                                  value: 5,
                                   borderColor: 'rgba(0, 113, 219, 0.5)',
                                   borderWidth: 2,
                                   label: {
                                     enabled: true,
-                                    content: 'Limite journalière sodium (mg)'
+                                    content: 'Limite journalière sel (g)'
                                   }
                                 },
                                 {
                                   type: 'line',
                                   mode: 'horizontal',
                                   scaleID: 'y-axis-0',
-                                  value: 950,
+                                  value: 1,
                                   borderColor: 'rgba(219, 139, 0, 0.5)',
                                   borderWidth: 2,
                                   label: {
                                     enabled: true,
-                                    content: 'Limite journalière calcium (mg)'
+                                    content: 'Limite journalière calcium (g)'
                                   }
                                 }]
                               }
