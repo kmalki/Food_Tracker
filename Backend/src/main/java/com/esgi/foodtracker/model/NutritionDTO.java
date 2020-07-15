@@ -6,17 +6,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NutritionDTO {
 
-    @JsonProperty("proteins_100g")
+    @JsonProperty("proteins_serving")
     private float proteine;
-    @JsonProperty("fat_100g")
+    @JsonProperty("fat_serving")
     private float lipide;
-    @JsonProperty("sugars_100g")
+    @JsonProperty("sugars_serving")
     private float glucide;
-    @JsonProperty("calcium_100g")
+    @JsonProperty("calcium_serving")
     private float calcium;
-    @JsonProperty("energy-kcal_100g")
+    @JsonProperty("energy-kcal_serving")
     private float calories;
-    @JsonProperty("salt_100g")
+    @JsonProperty("salt_serving")
     private float sel;
 
     private int quantity;
@@ -58,7 +58,7 @@ public class NutritionDTO {
     }
 
     public float getCalcium() {
-        return calcium*quantity;
+        return calcium*quantity*1000;
     }
 
     public void setCalcium(float calcium) {
