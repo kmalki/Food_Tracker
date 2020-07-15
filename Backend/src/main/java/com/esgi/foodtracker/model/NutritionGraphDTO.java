@@ -7,16 +7,16 @@ import java.util.List;
 
 public class NutritionGraphDTO {
 
-    private List<Integer> proteine;
-    private List<Integer> lipide;
-    private List<Integer> glucide;
-    private List<Integer> calcium;
-    private List<Integer> calories;
-    private List<Integer> sel;
+    private List<Double> proteine;
+    private List<Double> lipide;
+    private List<Double> glucide;
+    private List<Double> calcium;
+    private List<Double> calories;
+    private List<Double> sel;
     private List<LocalDate> dates;
 
-    public NutritionGraphDTO(List<Integer> proteine, List<Integer> lipide, List<Integer> glucide, List<Integer> calcium,
-                             List<Integer> calories, List<Integer> sel, List<LocalDate> dates) {
+    public NutritionGraphDTO(List<Double> proteine, List<Double> lipide, List<Double> glucide, List<Double> calcium,
+                             List<Double> calories, List<Double> sel, List<LocalDate> dates) {
         this.proteine = proteine;
         this.lipide = lipide;
         this.glucide = glucide;
@@ -26,43 +26,43 @@ public class NutritionGraphDTO {
         this.sel = sel;
     }
 
-    public List<Integer> getProteine() {
+    public List<Double> getProteine() {
         return proteine;
     }
 
-    public void setProteine(List<Integer> proteine) {
+    public void setProteine(List<Double> proteine) {
         this.proteine = proteine;
     }
 
-    public List<Integer> getLipide() {
+    public List<Double> getLipide() {
         return lipide;
     }
 
-    public void setLipide(List<Integer> lipide) {
+    public void setLipide(List<Double> lipide) {
         this.lipide = lipide;
     }
 
-    public List<Integer> getGlucide() {
+    public List<Double> getGlucide() {
         return glucide;
     }
 
-    public void setGlucide(List<Integer> glucide) {
+    public void setGlucide(List<Double> glucide) {
         this.glucide = glucide;
     }
 
-    public List<Integer> getCalcium() {
+    public List<Double> getCalcium() {
         return calcium;
     }
 
-    public void setCalcium(List<Integer> calcium) {
+    public void setCalcium(List<Double> calcium) {
         this.calcium = calcium;
     }
 
-    public List<Integer> getCalories() {
+    public List<Double> getCalories() {
         return calories;
     }
 
-    public void setCalories(List<Integer> calories) {
+    public void setCalories(List<Double> calories) {
         this.calories = calories;
     }
 
@@ -74,11 +74,11 @@ public class NutritionGraphDTO {
         this.dates = dates;
     }
 
-    public List<Integer> getSel() {
+    public List<Double> getSel() {
         return sel;
     }
 
-    public void setSel(List<Integer> sel) {
+    public void setSel(List<Double> sel) {
         this.sel = sel;
     }
 

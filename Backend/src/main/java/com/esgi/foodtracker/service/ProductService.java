@@ -205,55 +205,57 @@ public class ProductService {
                 .distinct()
                 .collect(Collectors.toList());
 
-        List<Integer> proteines = new ArrayList<>();
-        List<Integer> lipides = new ArrayList<>();
-        List<Integer> glucides = new ArrayList<>();
-        List<Integer> calciums = new ArrayList<>();
-        List<Integer> calories = new ArrayList<>();
-        List<Integer> sels = new ArrayList<>();
+        List<Double> proteines = new ArrayList<>();
+        List<Double> lipides = new ArrayList<>();
+        List<Double> glucides = new ArrayList<>();
+        List<Double> calciums = new ArrayList<>();
+        List<Double> calories = new ArrayList<>();
+        List<Double> sels = new ArrayList<>();
 
         dates.forEach(d -> {
             proteines.add(productUserDailyHabitDTOS.stream()
                     .filter(e -> e.getDate().equals(d))
-                    .map(e -> getProductNutrition(e.getPuk().getCode()))
-                    .map(NutritionDTO::getProteine).reduce(0, Integer::sum));
+                    .map(e -> getProductNutrition(e.getPuk().getCode(), e.getQuantity()))
+                    .map(NutritionDTO::getProteine).mapToDouble(Float::doubleValue).reduce(0, Double::sum));
 
             lipides.add(productUserDailyHabitDTOS.stream()
                     .filter(e -> e.getDate().equals(d))
-                    .map(e -> getProductNutrition(e.getPuk().getCode()))
-                    .map(NutritionDTO::getLipide).reduce(0, Integer::sum));
+                    .map(e -> getProductNutrition(e.getPuk().getCode(), e.getQuantity()))
+                    .map(NutritionDTO::getLipide).mapToDouble(Float::doubleValue).reduce(0, Double::sum));
 
             glucides.add(productUserDailyHabitDTOS.stream()
                     .filter(e -> e.getDate().equals(d))
-                    .map(e -> getProductNutrition(e.getPuk().getCode()))
-                    .map(NutritionDTO::getGlucide).reduce(0, Integer::sum));
+                    .map(e -> getProductNutrition(e.getPuk().getCode(), e.getQuantity()))
+                    .map(NutritionDTO::getGlucide).mapToDouble(Float::doubleValue).reduce(0, Double::sum));
 
             calciums.add(productUserDailyHabitDTOS.stream()
                     .filter(e -> e.getDate().equals(d))
-                    .map(e -> getProductNutrition(e.getPuk().getCode()))
-                    .map(NutritionDTO::getCalcium).reduce(0, Integer::sum)/1000);
+                    .map(e -> getProductNutrition(e.getPuk().getCode(), e.getQuantity()))
+                    .map(NutritionDTO::getCalcium).mapToDouble(Float::doubleValue).reduce(0, Double::sum)/1000);
 
             calories.add(productUserDailyHabitDTOS.stream()
                     .filter(e -> e.getDate().equals(d))
-                    .map(e -> getProductNutrition(e.getPuk().getCode()))
-                    .map(NutritionDTO::getCalories).reduce(0, Integer::sum));
+                    .map(e -> getProductNutrition(e.getPuk().getCode(), e.getQuantity()))
+                    .map(NutritionDTO::getCalories).mapToDouble(Float::doubleValue).reduce(0, Double::sum));
 
             sels.add(productUserDailyHabitDTOS.stream()
                     .filter(e -> e.getDate().equals(d))
-                    .map(e -> getProductNutrition(e.getPuk().getCode()))
-                    .map(NutritionDTO::getSel).reduce(0, Integer::sum));
+                    .map(e -> getProductNutrition(e.getPuk().getCode(), e.getQuantity()))
+                    .map(NutritionDTO::getSel).mapToDouble(Float::doubleValue).reduce(0, Double::sum));
         });
 
         return new NutritionGraphDTO(proteines, lipides, glucides, calciums, calories, sels, dates);
     }
 
-    public NutritionDTO getProductNutrition(String code){
+    public NutritionDTO getProductNutrition(String code, int n){
         String url = String.format("https://world.openfoodfacts.org/api/v0/product/%s.json", code);
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode;
         try {
             jsonNode = objectMapper.readTree(new URL(url)).get("product").get("nutriments");
-            return objectMapper.treeToValue(jsonNode, NutritionDTO.class);
+            NutritionDTO nutritionDTO = objectMapper.treeToValue(jsonNode, NutritionDTO.class);
+            nutritionDTO.setQuantity(n);
+            return nutritionDTO;
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
