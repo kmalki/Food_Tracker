@@ -36,10 +36,10 @@ export default function Home() {
   const API_URL_PRODUCTS = 'http://localhost:8080/products/';
 
   const [items, setItems] = useState([]);
-  const [startDate, setstartDate] = useState(moment().subtract(7, "d"));
-  const [endDate, setendDate] = useState(moment());
+  const [startDate, setstartDate] = useState(moment("2020-07-13"));
+  const [endDate, setendDate] = useState(moment("2020-07-15"));
   const [toasts, setToasts] = useState([]);
-  const [dates, setdates] = useState([moment().subtract(7, "d"), moment()]);
+  const [dates, setdates] = useState([moment("2020-07-13"), moment("2020-07-15")]);
   const [glucideArray, setglucideArray] = useState([]);
   const [lipideArray, setlipideArray] = useState([]);
   const [proteineArray, setproteineArray] = useState([]);
