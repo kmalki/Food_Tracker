@@ -231,7 +231,7 @@ public class ProductService {
             calciums.add(productUserDailyHabitDTOS.stream()
                     .filter(e -> e.getDate().equals(d))
                     .map(e -> getProductNutrition(e.getPuk().getCode(), e.getQuantity()))
-                    .map(NutritionDTO::getCalcium).mapToDouble(Float::doubleValue).reduce(0, Double::sum)/1000);
+                    .map(NutritionDTO::getCalcium).mapToDouble(Float::doubleValue).reduce(0, Double::sum));
 
             calories.add(productUserDailyHabitDTOS.stream()
                     .filter(e -> e.getDate().equals(d))

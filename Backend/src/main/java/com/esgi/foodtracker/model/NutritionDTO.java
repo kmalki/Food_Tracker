@@ -58,7 +58,7 @@ public class NutritionDTO {
     }
 
     public float getCalcium() {
-        return calcium*quantity;
+        return calcium*quantity*1000;
     }
 
     public void setCalcium(int calcium) {
