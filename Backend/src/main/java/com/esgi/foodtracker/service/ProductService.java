@@ -255,6 +255,8 @@ public class ProductService {
             jsonNode = objectMapper.readTree(new URL(url)).get("product").get("nutriments");
             NutritionDTO nutritionDTO = objectMapper.treeToValue(jsonNode, NutritionDTO.class);
             nutritionDTO.setQuantity(n);
+            logger.info(jsonNode.toString());
+            logger.info(code + " : "+ nutritionDTO.toString());
             return nutritionDTO;
         } catch (IOException e) {
             logger.error(e.getMessage());

@@ -37,7 +37,7 @@ public class NutritionDTO {
         return proteine*quantity;
     }
 
-    public void setProteine(int proteine) {
+    public void setProteine(float proteine) {
         this.proteine = proteine;
     }
 
@@ -45,7 +45,7 @@ public class NutritionDTO {
         return lipide*quantity;
     }
 
-    public void setLipide(int lipide) {
+    public void setLipide(float lipide) {
         this.lipide = lipide;
     }
 
@@ -53,15 +53,15 @@ public class NutritionDTO {
         return glucide*quantity;
     }
 
-    public void setGlucide(int glucide) {
+    public void setGlucide(float glucide) {
         this.glucide = glucide;
     }
 
     public float getCalcium() {
-        return calcium*quantity*1000;
+        return calcium*quantity;
     }
 
-    public void setCalcium(int calcium) {
+    public void setCalcium(float calcium) {
         this.calcium = calcium;
     }
 
@@ -69,7 +69,7 @@ public class NutritionDTO {
         return calories*quantity;
     }
 
-    public void setCalories(int calories) {
+    public void setCalories(float calories) {
         this.calories = calories;
     }
 
