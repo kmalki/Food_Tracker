@@ -58,20 +58,15 @@ export default function Home() {
     }
   ];
 
-  const toggleProgress = () => {
-
-    setShowProgress(!showProgress);
-
-  };
-
   useEffect(() => {
-
+    
     requestGraphData();
 
     // eslint-disable-next-line
   }, [])
 
   const requestGraphData = () => {
+    setShowProgress(true);
     axios.post(API_URL_PRODUCTS + 'getNutrition',
       {
         "less": {
@@ -93,12 +88,12 @@ export default function Home() {
         setcalorieArray(response.data.calories);
         setcalciumArray(response.data.calcium);
         setselArray(response.data.sel);
-        toggleProgress();
+        setShowProgress(false);
       }, (error) => {
         setdates([startDate, endDate]);
         console.log(error);
         setToasts(toasts.concat(toastsList[0]));
-        toggleProgress();
+        setShowProgress(false);
       });
   }
 
@@ -179,9 +174,15 @@ export default function Home() {
         lineTension: 0.1,
         borderColor: 'rgba(0, 113, 219, 1)',
         data: selArray
-      },
+      }
+    ]
+  };
+
+  const data4 = {
+    labels: dates,
+    datasets: [
       {
-        label: 'Calcium (g)',
+        label: 'Calcium (mg)',
         fill: false,
         lineTension: 0.1,
         borderColor: 'rgba(219, 139, 0, 1)',
@@ -495,17 +496,59 @@ export default function Home() {
                                     enabled: true,
                                     content: 'Limite journalière sel (g)'
                                   }
-                                },
+                                }]
+                              }
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <Line
+                            data={data4}
+                            options={{
+                              responsive: true,
+                              maintainAspectRatio: true,
+                              scales: {
+                                xAxes: [{
+                                  ticks: {
+                                    autoSkip: true,
+                                    maxTicksLimit: 10,
+                                  },
+                                  type: 'time',
+                                  time: {
+                                    tooltipFormat: 'MMM DD, YYYY',
+                                    displayFormats: {
+                                      'millisecond': 'MMM DD, YYYY',
+                                      'second': 'MMM DD, YYYY',
+                                      'minute': 'MMM DD, YYYY',
+                                      'hour': 'MMM DD, YYYY',
+                                      'day': 'MMM DD, YYYY',
+                                      'week': 'MMM DD, YYYY',
+                                      'month': 'MMM DD, YYYY',
+                                      'quarter': 'MMM DD, YYYY',
+                                      'year': 'MMM DD, YYYY',
+                                    }
+                                  }
+                                }],
+                                yAxes: [{
+                                  ticks: {
+                                    suggestedMin: 0,
+                                    suggestedMax: 850
+                                  }
+                                }]
+                              },
+                              annotation: {
+                                annotations: [
                                 {
                                   type: 'line',
                                   mode: 'horizontal',
                                   scaleID: 'y-axis-0',
-                                  value: 1,
+                                  value: 800,
                                   borderColor: 'rgba(219, 139, 0, 0.5)',
                                   borderWidth: 2,
                                   label: {
                                     enabled: true,
-                                    content: 'Limite journalière calcium (g)'
+                                    content: 'Limite journalière calcium (mg)'
                                   }
                                 }]
                               }
